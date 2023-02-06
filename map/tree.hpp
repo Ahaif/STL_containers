@@ -6,7 +6,7 @@
 /*   By: ahaifoul <ahaifoul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 10:35:27 by ahaifoul          #+#    #+#             */
-/*   Updated: 2022/06/20 20:22:26 by ahaifoul         ###   ########.fr       */
+/*   Updated: 2023/01/31 15:57:36 by ahaifoul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ namespace ft
         public: /*             Capacity                         */
 			bool empty() const { return (this->_size == 0); };
 			size_type size() const { return (this->_size); };
-			// size_type	max_size()	const	{ return (std::min<size_type>(std::numeric_limits<size_type>::max() / sizeof(Node_type), std::numeric_limits<difference_type>::max())); };
+			size_type	max_size()	const	{ return (std::min<size_type>(std::numeric_limits<size_type>::max() / sizeof(Node_type), std::numeric_limits<difference_type>::max())); };
 
 
         private:
