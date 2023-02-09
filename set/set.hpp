@@ -107,6 +107,7 @@ namespace ft
 						iterator node = iterator(this->_tree.search(value));
 						if (node != end())
 							return (ft::pair<iterator,bool>(node, false));
+						
 
 						Node_ptr inserted_node = this->_tree.insert(value);
 						return (ft::pair<iterator,bool>(iterator(inserted_node), true));

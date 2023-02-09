@@ -77,7 +77,7 @@ namespace ft
 		}
 		~rbTree(){};
 
-		private:
+		private: // private
 			Node_ptr _search(Node_ptr temp, value_type key) const
 			{
 				if (temp == nullptr)
@@ -119,73 +119,165 @@ namespace ft
 					temp = temp->right;
 				return(temp);
 			}
-			void insertFixup(Node_ptr node)
+
+			Node_ptr leftRotate(Node_ptr x)
 			{
-				// std::cout <<node->color<<std::endl;
-				std::cout <<"passed"<<std::endl;
-				std::cout <<node->color<<std::endl;
+				// std::cout<<"map before rotation"<<std::endl;
+				// this->print();
+
+
+				std::cout<<"x key is: "<<x->key << std::endl;
+				std::cout<<"passed"<<std::endl;
+				std::cout<<"x right key is: "<<x->right->key << std::endl;
 				
-				if(node->parent->color == RED)
+
+				Node_ptr p = x->parent;
+				std::cout<<"P is :  "<<p->key << std::endl;
+				Node_ptr y = x->right;
+				std::cout<<"y is :  "<<y->key << std::endl;
+
+				x->parent = y;
+
+
+				
+				Node_ptr T2 = y->left;
+				y->left = x;
+	
+
+				if (p != this->_end)
 				{
-					//RESOLVING DOUBLE RED
-					//COLOR OF UNCLE IS CASE DISTINCTION IN RESOLVING DR
-
-					
-					//check wich side left or right 
-					if(node->parent == node->parent->left)
-					{
-						
-						Node_ptr uncle = node->parent->right;
-						if(uncle->color == RED)
-						{
-							node->parent->color  = BLACK;
-							uncle->color = BLACK;
-							node->parent->parent->color = RED;
-							
-						
-
-							// std::cout << "passed" << std::endl;
-							// uncle->color = BLACK;
-							// node->parent->color = BLACK;
-							// node->parent->parent->color = RED;
-							// leftRotate(node);
-
-						}
-					}
-					
-					
+					if (p->left == x)
+						p->left = y;
+					else
+						p->right = y;
 				}
+				y->parent = p;
+
+				
+				x->right = T2;
+				if (T2 != nullptr)
+					T2->parent = x;
+				x->parent = y;
+				
+				
+				std::cout<<"--left rotation done--"<<std::endl;
+				return y;
+			};
+
+			Node_ptr insertFixup(Node_ptr node)
+			{	
+				std::cout<<"----- insert_fixup--"<<std::endl;
+				std ::cout << "node key is: "<<node->key<<std::endl;
+				std ::cout << "node_parent key is: "<<node->parent->key<<std::endl;
+				if(node->parent->parent)
+				{
+					std ::cout << "node_grandpa key is: "<< node->parent->parent->key <<std::endl;
+				}
+				
+				
+					if(node->color == RED && node->parent->color == RED)
+					{
+						std::cout<<"--> resolving double RED----------"<<std::endl;
+						if(node->parent == node->parent->parent->left)
+						{
+								Node_ptr uncle = node->parent->parent->right;
+								if(uncle && uncle->color == RED)
+								{
+									std::cout<<"passed3"<<std::endl;
+									node->parent->color  = BLACK;
+									uncle->color = BLACK;
+									node->parent->parent->color = RED;
+									node = node->parent->parent;
+				
+								}
+								else
+								{
+									if(node == node->parent->right)
+									{
+										std::cout<<"uncle black or NULL perform left rotation--"<<std::endl;
+										// std::cout<<node->key<<std::endl;
+										// node = node->parent;
+										std::cout<<node->parent->key<<std::endl;
+										
+										node = leftRotate(node->parent);
+										
+										
+										
+									}
+									// node->parent->color = BLACK;
+									// node->parent->parent->color = RED;
+									// rightRotate(node->parent->parent);
+								}
+						}
+					else
+						{
+							if (node->parent->parent == this->_root && this->_root->color == BLACK)
+							{
+								
+								node->parent->color = BLACK;
+								if(node->parent->parent->left)
+									node->parent->parent->left->color = BLACK;
+								else
+									node->parent->parent->right->color = BLACK;
+								std::cout <<"pass only recoloring "<<std::endl;
+							}
+							// else
+							// {	
+							// 	std::cout<<"passed1"<<std::endl;
+							// 	Node_ptr left_uncle = node->parent->parent->left;
+							// 	std ::cout << "node_uncleR key is: "<<left_uncle<<std::endl;
+							// 	std::cout <<"left uncle is: " << left_uncle->key<<std::endl;
+							// 	if(left_uncle && left_uncle->color == RED)
+							// 	{
+							// 		node->parent->color = BLACK;
+							// 		left_uncle->color = BLACK;
+							// 		node->parent->parent->color = RED;
+							// 		node = node->parent->parent;
+							// 	}
+							// 	else
+							// 	{
+							// 		std::cout<<"NODE is : "<<node->key<<std::endl;
+							// 		if(node == node->parent->left)
+							// 			{
+							// 				node = node->parent;
+							// 				rightRotate(node);
+							// 			}
+							// 			node->parent->color = BLACK;
+							// 			node->parent->parent->color = RED;
+							// 			leftRotate(node->parent->parent);
+							// 	}
+							// }
+						}
+
+						// this->_root->color = BLACK;
+					}
+					return nullptr;
+					
 				
 			}
-			Node_ptr _insert(Node_ptr temp, Node_ptr newNode)
+			void _insert(Node_ptr newNode)
 			{
-				
-				
-				newNode->color = RED;
-				if (temp == nullptr || temp == this->_end)
-					return (newNode);
-				if (!this->_comp(temp->key, newNode->key))
+
+				Node_ptr t = nullptr;
+				Node_ptr x = this->_root;
+				// std::cout<<"temp->key "<<temp->key<<std::endl;
+				// std::cout<<"newNode->key "<<newNode->key<<std::endl;
+				while(x != nullptr)
 				{
-					temp->left = _insert(temp->left, newNode);
-					if (temp->left == newNode)
-						newNode->parent = temp;
+					t = x;
+					if(!this->_comp(x->key, newNode->key))
+						x = x->left;
+					else if(this->_comp(x->key, newNode->key))
+						x = x->right;
+
 				}
-				else if (this->_comp(temp->key, newNode->key))
-				{
-					temp->right = _insert(temp->right, newNode);
-					if (temp->right == newNode)
-						newNode->parent = temp;
-				}
+				newNode->parent = t;
+				if(!this->_comp(t->key, newNode->key))
+					t->left = newNode;
 				else
-					return (temp);
-				
-	
-				
-				
-				// _ReSetHeight(temp);
-				// temp = _reBalance(temp);
-				
-				return (temp);
+					t->right = newNode;
+				insertFixup(newNode);
+
 			}
 		public:
 			Node_ptr create_node(value_type key)
@@ -195,6 +287,7 @@ namespace ft
 				new_node->parent = nullptr;
 				new_node->left = nullptr;
 				new_node->right = nullptr;
+				
 
 				return (new_node);
 			}
@@ -255,14 +348,18 @@ namespace ft
 					new_node->color = BLACK;
 					this->_root->parent = this->_end;
 					this->_end->left = this->_root;
-					this->_size++;
+					++this->_size;
 				}
 				else
 				{
+					new_node->color = RED;
+					++this->_size;
+					_insert(new_node);
 					
-					this->_size++;
-					new_node = _insert(this->_root, new_node);
-					insertFixup(new_node);
+					// std::cout<< this->_root->key << " color is: "<<this->_root->color<<std::endl;
+					// std::cout <<"passed"<<std::endl;
+					
+					
 					
 				}
 				return(new_node);
@@ -332,55 +429,33 @@ namespace ft
 			};
 			//helper function to print set
 
-			Node_ptr	_print(Node_ptr root)
+			Node_ptr	_print(Node_ptr root, int level)
 			{
 				
 				if(root == nullptr || root == this->_end)
 					return(root);
 
-				if(root->left)
-					_print(root->left);
+				_print(root->right, level + 1);
+				for (int i = 0; i < level; i++)
+    				std::cout << "    ";
+				std::cout << root->key << std::endl;
+				_print(root->left, level + 1);
 
-				std::cout<<"node key is: " <<root->key;
-				std::cout<<" node color is -> : "<<root->color<<std::endl;
-
-				if (root->right)
-					_print(root->right);
-
+				
 				return (root);
 
 			}
 			void 	print()
 			{
 				Node_ptr node = this->_root;
-				_print(node);
+				_print(node, 0);
+				std::cout<<"the root is: "<<node->key<<std::endl;
 
 			}
 
 			
 
-			Node_ptr leftRotate(Node_ptr x)
-			{
-				Node_ptr y = x->right;
-				Node_ptr T2 = y->left;
-				Node_ptr p = x->parent;
-				y->left = x;
-				x->right = T2;
-				if (p != this->_end)
-				{
-					if (p->left == x)
-						p->left = y;
-					else
-						p->right = y;
-				}
-				y->parent = x->parent;
-				x->parent = y;
-				if (T2 != nullptr)
-					T2->parent = x;
-				// x->height = std::max(_Height(x->left), _Height(x->right)) + 1;
-				// y->height = std::max(_Height(y->left), _Height(y->right)) + 1;
-				return y;
-			};
+			
 
 			Node_ptr rightRotate(Node_ptr parent)
 			{
