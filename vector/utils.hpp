@@ -1,9 +1,8 @@
-#ifndef VECTORUTILS_HPP
-#define VECTORUTILS_HPP
+#ifndef UTILS_HPP
+#define UTILS_HPP
 
 #include "vector.hpp"
-
-namespace ft 
+namespace ft
 {
 	template<bool Cond, class T = void> struct	enable_if				{};
 	template<class T>					struct	enable_if<true, T>		{ typedef T type; };
@@ -55,7 +54,8 @@ namespace ft
 		}
 		return (first2 != last2);
 	}
-};
+}
 
 
 #endif
+

@@ -49,7 +49,7 @@ namespace ft
 	// free function that takes two arguments, both of which are iterators
 	
     template<class Iterator1, class Iterator2>
-    bool    operator==(const vecIter<Iterator1> &lhs, const vecIter<Iterator1> &rhs){ return (lhs.base() == rhs.base()); };
+    bool    operator==(const vecIter<Iterator1> &lhs, const vecIter<Iterator2> &rhs){ return (lhs.base() == rhs.base()); };
     template <class Iterator1, class Iterator2>
 	bool    operator!= (const vecIter<Iterator1>& lhs, const vecIter<Iterator2>& rhs) { return (lhs.base() != rhs.base()); };
 	template <class Iterator1, class Iterator2>

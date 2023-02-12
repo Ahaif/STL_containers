@@ -6,7 +6,7 @@
 /*   By: ahaifoul <ahaifoul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:10:58 by ahaifoul          #+#    #+#             */
-/*   Updated: 2023/01/29 18:56:00 by ahaifoul         ###   ########.fr       */
+/*   Updated: 2023/02/10 16:36:33 by ahaifoul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -346,9 +346,9 @@ namespace ft
 	};
 
     	/*             relational operators                         */
-
+ 
 	template <class T, class Alloc>
-	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return ((lhs.size() == rhs.size()) && ft ::equal(lhs.begin(), lhs.end(), rhs.begin()));};
+	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return ((lhs.size() == rhs.size()) && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));};
 	template <class T, class Alloc>
 	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (!(lhs == rhs));};
 	template <class T, class Alloc>
