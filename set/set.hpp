@@ -71,39 +71,46 @@ namespace ft
 
 					~set(){this->_tree.clear();}
 
-					set& operator=( const set& other )
+					set& operator=( const set& x)
 					{
 						// this->_tree.clear();
 						// for (iterator it = other.begin(); it != other.end(); ++it) {
                     	// 	insert(*it);
                 		// 	}
-						if(other)
-						{
-							this->_tree.clear();
-							this->_alloc = other._alloc;
-							this->_comp = other._comp;
-							this->_tree.insert(begin(), end());
+						
+							// this->_tree.clear();
+							// this->_alloc = other._alloc;
+							// this->_comp = other._comp;
+							// insert(other.begin(), other.end());
 
-							return(*this);
+							// return(*this);
+
+						  _tree.clear();
+                		for (const_iterator it = x.begin(); it != x.end(); ++it) {
+                    		this->_tree.insert(*it);
 						}
+						return(*this);
+                	}
+						
 
-					}
 					allocator_type get_allocator() const{
 						return(allocator_type());
 					}
 
 					//ITERATORS-----------------------------------
-					iterator			end() {return(iterator(this->_tree.end()));}
-					const_iterator		end() const {return(const_iterator(this->_tree.end()));}
+					iterator			end() 		{return(this->_tree.end());}
+					const_iterator		end() const {return(this->_tree.end());}
 
-					iterator			begin(){return(iterator(this->_tree.begin()));}
-					iterator			begin() const {return(const_iterator(this->_tree.begin()));}
+					iterator			begin(){return(this->_tree.begin());}
+					const_iterator			begin() const {return(this->_tree.begin());}
 
-					reverse_iterator	rbegin(){return(reverse_iterator(this->_tree.end()));}
-					reverse_iterator	rbegin() const {return(const_reverse_iterator(this->_tree.end()));}
+					reverse_iterator	rbegin(){return(this->_tree.rbegin());}
+					const_reverse_iterator	rbegin() const {return(this->_tree.rbegin());}
 
-					reverse_iterator	rend(){return(reverse_iterator(this->_tree.begin()));}
-					reverse_iterator	rend() const {return(const_reverse_iterator(this->_tree.begin()));}
+					reverse_iterator	rend(){
+						return(this->_tree.rend());
+						}
+					const_reverse_iterator	rend() const {return(this->_tree.rend());}
 
 					//CAPACITY-------------------------------------
 					bool				empty() const{return (this->_tree.empty());}
@@ -134,8 +141,29 @@ namespace ft
 							first++;
 						}
 					}
+
+
+					iterator insert( iterator pos, const value_type& value )
+					{
+						(void) pos;
+						return (insert(value).first);
+
+					}
 					//erase
-					void				swap( set& other ){this->_tree.swap(other);}
+					size_type erase(iterator position )
+					{
+						this->_tree.remove(*position);
+						return(1);
+						
+
+					}
+					size_type erase( const value_type& key)
+					{
+						this->_tree.remove(key);
+						return(1);
+					}
+
+					void				swap( set &other){this->_tree.swap(other._tree);}
 
 					//LOOKUP--------------------------------------
 
@@ -143,7 +171,7 @@ namespace ft
 					iterator 			find( const key_type& key) {return (iterator(this->_tree.search(key)));}
 					iterator 			find( const key_type& key) const {return (const_iterator(this->_tree.search(key)));}
 					
-					size_type			count (const value_type& k) const	{ return (this->find(k) != this->end() ? 1 : 0); };
+					size_type			count (const value_type& k) const	{ return (this->_tree.count(k)); };
 
 					iterator			lower_bound( const key_type& key ){return(iterator(this->_tree.lower_bound(key)));}
 					const_iterator 		lower_bound( const key_type& key ) const {return(const_iterator(this->_tree.lower_bound(key)));};

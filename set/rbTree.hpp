@@ -106,33 +106,36 @@ namespace ft
 			}
 			Node_ptr _min() const
 			{
+				if(this->_root == this->_end)
+					return(this->_end);
 				Node_ptr temp = this->_root;
-				while(temp != this->_end && temp->left)
+				while(temp->left != nullptr && temp->left)
 					temp = temp->left;
 				return(temp);
 			}
 			Node_ptr _max() const
 			{
 				Node_ptr temp = this->_root;
-				while(temp != this->_end && temp->right)
+				while(temp->right && temp->right != this->_end)
 					temp = temp->right;
 				return(temp);
 			}
 
 			Node_ptr rightRotate(Node_ptr x)
 			{
-			
-				
-				Node_ptr p = x->parent;
-				// std::cout <<"p is "<<p->key<<std::endl;
+				// std::cout<<"right rotate"<<std::endl;
+				// std::cout<<"x is: "<<x->key<<std::endl;
+
 				Node_ptr y = x->left;
-				
 				Node_ptr T2 = y->right;
+				Node_ptr p = x->parent;
 				
-				
+				// std::cout<<"y is: "<<y->key<<std::endl;
+
 				y->right = x;
-				x->parent = y;
-				y->parent = p;
+				x->left = T2;
+				
+				// std::cout<<"p is: "<<p->parent->key<<std::endl;
 				
 				if (p != this->_end)
 				{
@@ -142,9 +145,16 @@ namespace ft
 						p->left = y;
 				}
 				else
+				{
 					this->_root = y;
+					
+					this->_end->left = this->_root;
+					this->_root->parent = this->_end;
+				}
+					
+				y->parent = p;
+				x->parent = y;
 
-				x->left = T2;
 				if (T2 != nullptr)
 					T2->parent = x;
 				return y;
@@ -153,20 +163,23 @@ namespace ft
 
 			Node_ptr leftRotate(Node_ptr x)
 			{
-				std::cout<<"x is: "<<x->key<<std::endl;
+				// std::cout<<"x is: "<<x->key<<std::endl;
 
-				
+				// std::cout<<"passed1 "<<std::endl;
 				Node_ptr y = x->right;
+				// std::cout<<"y is: "<<y->key<<std::endl;
+				// std::cout<<"passed"<<y->key<<std::endl;
+
 				Node_ptr T2 = y->left;
 				Node_ptr p = x->parent;
 				
-				std::cout<<"y is: "<<y->key<<std::endl;
+				
 				
 				y->left = x;
 				x->right = T2;
 
 
-				std::cout<<"p is: "<<p->parent->key<<std::endl;
+				// std::cout<<"p is: "<<p->parent->key<<std::endl;
 				
 				
 				
@@ -175,38 +188,44 @@ namespace ft
 					if (p->left == x)
 					{
 						p->left = y;
+						// std::cout <<"passed"<<std::endl;
 						
 					}
 					else
 					{
 						p->right = y;
-						std::cout <<"passed"<<std::endl;
+						// std::cout <<"passed"<<std::endl;
 					}
 				}
+				else
+				{
+					this->_root = y;
+					
+					this->_end->left = this->_root;
+					this->_root->parent = this->_end;
+				}
+					
+
 				y->parent = x->parent;
 				x->parent = y;
 				
-				// else
-				// 	this->_root = y;
-			
 
-				
 				if (T2 != nullptr)
 					T2->parent = x;
 				return y;
 			};
 			Node_ptr insertFixup(Node_ptr node)
 			{
-				std::cout<<"insert fix up --->"<< node->key<<std::endl;
+				
 				while(node && node->color == RED && node->parent->color == RED)
 					{
-						std::cout<<"node is: "<<node->key<<std::endl;
+						// std::cout<<"node is: "<<node->key<<std::endl;
 						if(node->parent == node->parent->parent->left)
 			 			{
 							Node_ptr right_uncle = node->parent->parent->right;
 							if(right_uncle && right_uncle->color == RED)
 							{
-								std::cout<<"case z : node uncle RED, recolor " <<std::endl;
+								// std::cout<<"case z : node uncle RED, recolor " <<std::endl;
 								node->parent->color = BLACK;
 								right_uncle->color = BLACK;
 								node = node->parent->parent;
@@ -216,25 +235,31 @@ namespace ft
 							}
 							else
 							{
-								std::cout<<"case 2 : node uncle black(triangle) right-side, LR+RR+COL " <<std::endl;
+								// std::cout<<"case 2 : node uncle black(triangle) right-side, LR+RR+COL " <<std::endl;
 								
 								if(node->parent == node->parent->parent->left)
 								{
 									
 									node = node->parent;
-									std::cout<<"node beforeLR is: "<<node->key<<std::endl;
-									leftRotate(node);
-									std::cout<<"node after LR is: "<<node->key<<std::endl;
+									// std::cout<<"node before LR is: "<<node->key<<std::endl;
+									rightRotate(node);
+									// std::cout<<"node after LR is: "<<node->key<<std::endl;
+									// std::cout<<"node parent after LR is: "<<node->parent->key<<std::endl;
+									// std::cout<<"node grand-parent after LR is: "<<node->parent->parent->key<<std::endl;
 									
 
 									
 								}
+								
+								
 								node->parent->color = BLACK;
 								node->parent->parent->color = RED;
 								
-								std::cout<<"node PP before RR is: "<<node->parent->parent->key<<std::endl;
-								rightRotate(node->parent->parent);
-								std::cout<<"node PP after r: "<<node->parent->parent->key<<std::endl;
+								
+								leftRotate(node->parent);
+								// std::cout<<"node after RR is: "<<node->key<<std::endl;
+								// std::cout<<"node parent after RR is: "<<node->parent->key<<std::endl;
+								// std::cout<<"node grand-parent after RR is: "<<node->parent->parent->key<<std::endl;
 								
 
 							}
@@ -244,7 +269,7 @@ namespace ft
 							Node_ptr left_uncle = node->parent->parent->left;
 							if(left_uncle && left_uncle->color == RED)
 							{
-								std::cout<<"case 1 : node uncle RED in right side, recolor " <<std::endl;
+								// std::cout<<"case 1 : node uncle RED in right side, recolor " <<std::endl;
 								node->parent->color = BLACK;
 								left_uncle->color = BLACK;
 								node->parent->parent->color = RED;
@@ -253,23 +278,22 @@ namespace ft
 							}
 							else
 							{
-								std::cout<<"case 3 : node uncle BLACK(line) in right side, LR " <<std::endl;
+								// std::cout<<"case 3 : node uncle BLACK(line) in right side, LR " <<std::endl;
 								if(node->parent == node->parent->parent->right)
 								{
 									
-									
-									std::cout<<"node parent before is: "<<node->parent->key<<std::endl;
+									node = node->parent;
 									node->color = BLACK;
 									node->parent->color = RED;
-									node = node->parent;
-									std::cout<<"node before lr: "<<node->key<<std::endl;
+									// std::cout<<"node before lr: "<<node->key<<std::endl;
+									// std::cout<<"node parent before is: "<<node->parent->key<<std::endl;
 
-									leftRotate(node);
-									std::cout<<"node after lr: "<<node->key<<std::endl;
-									std::cout<<"node parent after is: "<<node->parent->key<<std::endl;
-									// node = node->parent;
-									// node->color = BLACK;
-									// node->parent->color = RED;
+									leftRotate(node->parent);
+									
+									// // break;
+									// std::cout<<"node after lr: "<<node->key<<std::endl;
+									// std::cout<<"node parent after is: "<<node->parent->key<<std::endl;
+								
 									
 								}
 							}
@@ -284,107 +308,7 @@ namespace ft
 
 			}
 
-			// Node_ptr insertFixup(Node_ptr node)
-			// {	
-				
-			// 	std::cout<<"---insert fix up node is-> "<<node->key<<std::endl;
-				
-			// 		while(node && node->color == RED && node->parent->color == RED)
-			// 		{
-			// 			this->print();
-			// 			std::cout<<"node is"<<node->key<<std::endl;
-						
-			// 			if(node->parent == node->parent->parent->left)
-			// 			{
-							
-							
-							
-			// 					Node_ptr uncle = node->parent->parent->right;
-			// 					if(uncle && uncle->color == RED)
-			// 					{
-									
-			// 						node->parent->color  = BLACK;
-			// 						uncle->color = BLACK;
-			// 						node->parent->parent->color = RED;
-			// 						// node = node->parent->parent;
-				
-			// 					}
-			// 					else
-			// 					{
-									
-			// 						if(node == node->parent->right)
-			// 						{
-			// 							// std::cout<<"node parent is"<<node->parent->key<<std::endl;
-			// 							leftRotate(node->parent);
-										
-			// 							// node = node->parent;
-			// 						}
-									
-			// 						node->parent->color = RED;
-			// 						node->color = BLACK;
-			// 						if(node->parent->parent)
-			// 							node->parent->parent->color = RED;
-			// 						// std::cout<<"node parent is"<<node->parent->key<<std::endl;
-
-			// 						rightRotate(node->parent);
-									
-			// 					}
-			// 			}
-			// 			else
-			// 			{
-							
-							
-							
-			// 				if (node->parent == this->_root && this->_root->color == BLACK)
-			// 				{
-			// 					node->parent->color = BLACK;
-			// 					if(node->parent->parent->left)
-			// 						node->parent->parent->left->color = BLACK;
-			// 					else
-			// 						node->parent->parent->right->color = BLACK;
-			// 				}
-			// 				else
-			// 				{	
-								
-			// 					Node_ptr left_uncle = node->parent->parent->left;
-			// 					if(left_uncle && left_uncle->color == RED)
-			// 					{
-									
-									
-			// 						node->parent->color = BLACK;
-			// 						left_uncle->color = BLACK;
-			// 						node->parent->parent->color = RED;
-									
-			// 						// node = node->parent;
-									
-			// 					}
-			// 					else
-			// 					{
-									
-									
-			// 						if(node == node->parent->left)
-			// 							{
-			// 								// std::cout<<"special case"<<std::endl;
-			// 								// node = node->parent;
-			// 								rightRotate(node);
-			// 							}
-			// 							std::cout<<"ab"<<std::endl;
-										
-			// 							node->parent->color = BLACK;
-			// 							node->parent->parent->color = RED;
-			// 							leftRotate(node->parent->parent);
-										
-			// 					}
-			// 				}
-			// 			}
-			// 			node = node->parent->parent;
-			// 			this->_root->color = BLACK;
-						
-						
-			// 		}
-			// 		return nullptr;
-			// }
-			void _insert(Node_ptr newNode)
+			Node_ptr	_insert(Node_ptr newNode)
 			{
 
 				Node_ptr t = nullptr;
@@ -404,7 +328,96 @@ namespace ft
 				else
 					t->right = newNode;
 				insertFixup(newNode);
+				return(newNode);
 			}
+			void transplant(Node_ptr u, Node_ptr v)
+			{
+				
+				if(u->parent == nullptr)
+				{
+					this->_root = v;
+				}
+				else if (u == u->parent->left)
+				{
+					u->parent->left = v;
+				}
+				else
+				{
+					
+					u->parent->right = v;
+					
+				}
+				std::cout<<"passed 2"<<std::endl;
+				if(v != nullptr)
+					v->parent = u->parent;
+				std::cout<<"passed 3"<<std::endl;
+			}
+
+			Node_ptr _delete(Node_ptr root, Node_ptr node)
+			{
+				//transplant help us move subtree within rb tree (3condition)
+				
+				Node_ptr y = node;
+				Node_ptr x = nullptr;
+				int y_color = y->color;
+				
+				if(node->left == nullptr)
+				{
+					
+					x = node->right;
+					transplant(node, x);
+					
+
+				}
+				else if (node->right == nullptr)
+				{
+					x = node->left;
+					transplant(node, x);
+				}
+				else
+				{
+					
+					y = _TreeMin(node->right);
+					std::cout<<"y is: "<<y->key<<std::endl;
+					y_color = y->color;
+					x = y->right;
+
+			
+					
+
+				
+					if(y->parent == node)
+					{
+						if(x ==nullptr)
+							y->parent->right = nullptr;
+						else
+							x->parent = y;
+						std::cout<<"passed"<<std::endl;
+					}
+					else
+					{
+						transplant(y, y->right);
+						y->right = node->right;
+						y->right->parent = y;
+					}
+
+					
+					transplant(node, y);
+					y->left = node->left;
+					y->left->parent = y;
+					y->color = node->color;
+
+				}
+				std::cout<<"passed _remove"<<std::endl;
+				
+				delete node;
+				// if(y->color == BLACK)
+				// {
+				// 	delete_Fixup(x);
+				// }
+				return(root);
+			}
+			
 		public:
 			Node_ptr create_node(value_type key)
 			{
@@ -416,7 +429,7 @@ namespace ft
 				return (new_node);
 			}
 
-			Node_ptr search(value_type key)
+			Node_ptr search(value_type const &key) const
 			{
 				if(this->_root == this->_end)
 					return(this->_end);
@@ -428,15 +441,16 @@ namespace ft
 
 
 			//ITERATORS-----------------------------------
-			Node_ptr	begin(){return(_min());}
-			Node_ptr	begin() const {return(_min());}
-			Node_ptr	end() {return(this->_end);}
-			Node_ptr	end() const {return(this->_end);}
+			iterator		begin()			{ return (iterator(_min()));};
+			const_iterator	begin() const	{ return (const_iterator(_min()));};
+			iterator		end() 			{ return (iterator(this->_end));};
+			const_iterator	end() 	const 	{ return (const_iterator(this->_end));}
 
-			Node_ptr	rbegin(){return(this->_end);}
-			Node_ptr	rbegin() const {return(this->_end());}
-			Node_ptr	rend(){return(this->_min());}
-			Node_ptr	rend() const {return(this->_min());}
+
+			reverse_iterator		rbegin()		{return(reverse_iterator(iterator(_max())));}
+			const_reverse_iterator	rbegin() const {return(const_reverse_iterator(iterator(_max())));}
+			reverse_iterator		rend()			{return (reverse_iterator((iterator(_min() - 1))));}
+			const_reverse_iterator	rend() const 	{return(const_reverse_iterator((iterator(_min() - 1))));}
 
 
 			//CAPACITY-----------------------------------
@@ -469,12 +483,13 @@ namespace ft
 				{
 					this->_root = new_node;
 					new_node->color = BLACK;
-					this->_root->parent = this->_end;
 					this->_end->left = this->_root;
+					this->_root->parent = this->_end;
 					++this->_size;
 				}
 				else
 				{
+					
 					new_node->color = RED;
 					++this->_size;
 					_insert(new_node);
@@ -482,8 +497,26 @@ namespace ft
 				return(new_node);
 
 			}
+
+			
+			
 			//erase
-			void swap(rbTree& x)
+			void	remove(value_type const &value)
+			{
+				Node_ptr node = search(value);
+				if(node != this->_end)
+				{
+					this->_root = _delete(this->_root, node);
+				}
+				else
+					std::cout<<"node is not found"<<std::endl;
+				
+			}
+
+
+
+
+			void swap(rbTree &x)
 			{
 				size_type tmp_size = x._size;
 				allocator_type tmp_alloc = x._alloc;
@@ -507,7 +540,7 @@ namespace ft
 			size_type count( const value_type& key ) const 
 			{
 				Node_ptr ret = search(key);
-				if(ret)
+				if(ret != this->_end)
 					return 1;
 				else
 					return 0;
@@ -534,13 +567,11 @@ namespace ft
 			{
 				Node_ptr node = _min();
 
-				while (!this->_comp(val, node->key.first))
+				while (!this->_comp(val, node->key))
 				{
 					node = successor(node);
 					if (node == nullptr || node == this->_end)
-					{
 						return (this->_end);
-					}
 				}
 				return (node);
 			};
@@ -570,7 +601,46 @@ namespace ft
 
 			}	
 
+
+		
+	
+
     };
+		
+		template<class Node_ptr>
+		Node_ptr predecessor(Node_ptr node)
+		{
+		
+			
+			// if(node == nullptr && node->left)
+			// {
+			
+			// 	node = node->left;
+			// 	return (_TreeMax(node->left));
+
+			// }
+			if (node->left && node)
+			{
+		
+				
+				return (_TreeMax(node->left));
+
+					
+				
+			}
+			
+			Node_ptr temp = node->parent;
+			
+			while (temp && temp->left == node)
+			{
+				node = temp;
+				temp = temp->parent;
+			}
+			if (temp == 0)
+				return (node);
+			return (temp);
+			
+		}
 
 
 		template<class Node_ptr>
@@ -584,16 +654,22 @@ namespace ft
 		template<class Node_ptr>
 		Node_ptr _TreeMax(Node_ptr temp)
 		{
-			while (temp->right != nullptr)
+				
+			
+			while (temp->right && temp->right != nullptr)
 				temp = temp->right;
+			
+			
 			return (temp);
 		};
 
 		template<class Node_ptr>
 		Node_ptr successor(Node_ptr node)
 		{
+		
 			if (node->right)
 				return (_TreeMin(node->right));
+			
 
 			Node_ptr temp = node->parent;
 			while (temp && temp->right == node)
@@ -604,22 +680,7 @@ namespace ft
 			return (temp);
 		};
 
-		template<class Node_ptr>
-		Node_ptr predecessor(Node_ptr node)
-		{
-			if (node->left)
-				return (_TreeMax(node->left));
-
-			Node_ptr temp = node->parent;
-			while (temp && temp->left == node)
-			{
-				node = temp;
-				temp = temp->parent;
-			}
-			if (temp == nullptr)
-				return (node);
-			return (temp);
-		};
+		
 
 
 

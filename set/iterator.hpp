@@ -6,7 +6,7 @@
 /*   By: ahaifoul <ahaifoul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 10:35:55 by ahaifoul          #+#    #+#             */
-/*   Updated: 2023/02/12 10:28:04 by ahaifoul         ###   ########.fr       */
+/*   Updated: 2023/02/15 10:10:39 by ahaifoul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include <iostream>
 #include <string>
-#include "../reverse_iterator.hpp"
+#include "reverse_iterator.hpp"
 #include "../iterator_traits.hpp"
 
 namespace ft
@@ -37,6 +37,7 @@ namespace ft
 		public:
 			TreeIter(): _it(nullptr) {};
 			explicit	TreeIter( Node_ptr x ): _it(x) {};
+			
 			template <class Iter>
 			TreeIter ( const TreeIter<Iter, Node_ptr>& node_it ): _it(node_it.base()) {};
 
@@ -44,8 +45,14 @@ namespace ft
 			reference		operator*() const						{ return (this->_it->key); };
 			TreeIter&		operator++()							{this->_it = successor(this->_it); return (*this); };		// pre-increment
 			TreeIter		operator++(int)							{ TreeIter temp(*this); ++(*this); return (temp); };		// post-increment
-			TreeIter&		operator--()							{this->_it = predecessor(this->_it); return (*this); };		// pre-decrement
-			TreeIter		operator--(int)							{ TreeIter temp(*this); --(*this); return (temp); };		// post-decrement
+			TreeIter&		operator--()							{
+				
+			
+				this->_it = predecessor(this->_it); return (*this);
+				 };		// pre-decrement
+			TreeIter		operator--(int)							{
+				
+				 TreeIter temp(*this); --(*this); return (temp); };		// post-decrement
 			pointer			operator->()							{ return (&(operator*())); };
 			reference		operator[]( difference_type n ) const	{ return (*(this->_it + n)); };
 	};
@@ -64,5 +71,7 @@ namespace ft
 	bool operator>=  (const TreeIter<T, Node_ptr>& lhs, const TreeIter<T, Node_ptr>& rhs) { return (lhs.base() >= rhs.base()); };
 
 };
+
+
     
 #endif
