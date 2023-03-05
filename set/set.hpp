@@ -73,18 +73,6 @@ namespace ft
 
 					set& operator=( const set& x)
 					{
-						// this->_tree.clear();
-						// for (iterator it = other.begin(); it != other.end(); ++it) {
-                    	// 	insert(*it);
-                		// 	}
-						
-							// this->_tree.clear();
-							// this->_alloc = other._alloc;
-							// this->_comp = other._comp;
-							// insert(other.begin(), other.end());
-
-							// return(*this);
-
 						  _tree.clear();
                 		for (const_iterator it = x.begin(); it != x.end(); ++it) {
                     		this->_tree.insert(*it);
@@ -150,17 +138,16 @@ namespace ft
 
 					}
 					//erase
-					size_type erase(iterator position )
-					{
-						this->_tree.remove(*position);
-						return(1);
+					// size_type erase(iterator position )
+					// {
+					// 	return(this->_tree.remove(*position));
+						
 						
 
-					}
+					// }
 					size_type erase( const value_type& key)
 					{
-						this->_tree.remove(key);
-						return(1);
+						return(this->_tree.remove(key));
 					}
 
 					void				swap( set &other){this->_tree.swap(other._tree);}

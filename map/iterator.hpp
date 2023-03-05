@@ -6,7 +6,7 @@
 /*   By: ahaifoul <ahaifoul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 10:35:55 by ahaifoul          #+#    #+#             */
-/*   Updated: 2022/06/20 10:36:00 by ahaifoul         ###   ########.fr       */
+/*   Updated: 2023/02/23 17:45:41 by ahaifoul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 #include <iostream>
 #include <string>
-#include "../reverse_iterator.hpp"
-#include "tree.hpp"
+#include "reverse_iterator.hpp"
+#include "rbTree.hpp"
 #include "utils.hpp"
 
 namespace ft
@@ -47,7 +47,7 @@ namespace ft
 			TreeIter		operator++(int)							{ TreeIter temp(*this); ++(*this); return (temp); };		// post-increment
 			TreeIter&		operator--()							{this->_it = predecessor(this->_it); return (*this); };		// pre-decrement
 			TreeIter		operator--(int)							{ TreeIter temp(*this); --(*this); return (temp); };		// post-decrement
-			pointer			operator->()							{ return (&(operator*())); };
+			pointer			operator->() const						{ return (&(operator*())); };
 			reference		operator[]( difference_type n ) const	{ return (*(this->_it + n)); };
 	};
 

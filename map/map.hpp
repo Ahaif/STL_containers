@@ -6,14 +6,15 @@
 /*   By: ahaifoul <ahaifoul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 10:35:45 by ahaifoul          #+#    #+#             */
-/*   Updated: 2023/02/06 12:21:45 by ahaifoul         ###   ########.fr       */
+/*   Updated: 2023/02/23 17:43:05 by ahaifoul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAP_HPP
 #define MAP_HPP
 
-#include "tree.hpp"
+#include "rbTree.hpp"
+#include "iterator.hpp"
 #include "utils.hpp"
 
 namespace ft
@@ -58,7 +59,7 @@ namespace ft
 			private:
 				typedef Node<value_type>								Node_type;
 				typedef Node_type*										Node_ptr;
-				typedef Tree<value_type, key_compare, allocator_type>	Tree_type;
+				typedef rbTree<value_type, key_compare, allocator_type>	Tree_type;
 				typedef Tree_type*										Tree_ptr;
 
         
@@ -127,12 +128,8 @@ namespace ft
 			};
 			iterator 				insert (iterator position, const value_type& val)
 			{
-				Node_ptr node = position.base();
-				if (val.first > predecessor(node)->key.first && val.first < successor(node)->key.first)
-					position = iterator(this->_tree.insertInPossition(node, val));
-				else
-					position = insert(val).first;
-				return (position);
+					(void) position;
+					return (insert(val).first);
 			};
 			template <class InputIterator>
 			void 					insert (InputIterator first, InputIterator last)

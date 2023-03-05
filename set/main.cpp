@@ -32,7 +32,7 @@
     
 // }
 
-// #define _ratio 10000
+#define _ratio 10000
 
 
 // std::vector<int> std_test()
@@ -96,25 +96,39 @@
 
 int main()
 {
-    _set<int> st;
-    st.insert(1);
-    st.insert(2);
+    
+    std::vector<int> v;
+    _set<int>st;
+    // std::set<int>st;
+    st.insert(7);
+    st.insert(30);
     st.insert(6);
-    st.insert(15);
+    st.insert(10);
+    st.insert(5);
+    st.insert(20);
+       
+       
+
 
     st.print();
 
-    st.erase(15);
 
-    std::cout<<"map after erase"<<std::endl;
+    // std::cout<<"map after erase: "<<std::endl;
+    
+  
+    // st.print();
+   
 
-     st.print();
 
-    st.erase(2);
+   
 
-    std::cout<<"map after erase"<<std::endl;
 
-     st.print();
+    //  for(; i < 30 * _ratio ; i++)
+    // {
+    //     // std::cout<<"i is: "<<i<<std::endl;
+    //     st.erase(i);
+    // }
+ 
 
 
 }
