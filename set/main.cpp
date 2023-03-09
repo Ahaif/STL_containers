@@ -100,23 +100,34 @@ int main()
     std::vector<int> v;
     _set<int>st;
     // std::set<int>st;
-    st.insert(7);
-    st.insert(30);
-    st.insert(6);
-    st.insert(10);
-    st.insert(5);
-    st.insert(20);
-       
-       
 
+    for(int i = 0; i < 15; i++)
+    {
+        st.insert(i);
+    }
+
+    
+     st.print();
+    //  st.erase(14);
+    //   st.print();
+
+       st.erase(0);
+
+    std::cout<<"map after erase: "<<std::endl;
 
     st.print();
+    
 
 
-    // std::cout<<"map after erase: "<<std::endl;
+
+
+       
+
+
+
     
   
-    // st.print();
+   
    
 
 

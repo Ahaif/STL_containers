@@ -219,16 +219,15 @@ namespace ft
 							}
 							else
 							{
-								if(node->parent == node->parent->parent->left)
+								Node_ptr grandparent = node->parent->parent;
+								if (node == node->parent->right)
 								{
-									node = node->parent;
-									rightRotate(node);
+									leftRotate(grandparent->left);
 								}
-								
-								node->parent->color = BLACK;
-								node->parent->parent->color = RED;
-		
-								leftRotate(node->parent);
+								rightRotate(grandparent);
+								node->color = BLACK;
+								node->left->color = RED;
+								node->right->color = RED;
 							}
 						}
 						else
