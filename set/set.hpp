@@ -103,7 +103,7 @@ namespace ft
 					//CAPACITY-------------------------------------
 					bool				empty() const{return (this->_tree.empty());}
 					size_type			size() const {return(this->_tree.size());}
-					size_type			max_size() const{return(this->tree.max_size());}
+					size_type			max_size() const{return(this->_tree.max_size());}
 
 					//MODIFIERS-----------------------------------
 					void				clear(){this->_tree.clear();}
@@ -137,18 +137,28 @@ namespace ft
 						return (insert(value).first);
 
 					}
-					//erase
-					// size_type erase(iterator position )
-					// {
-					// 	return(this->_tree.remove(*position));
-						
-						
-
-					// }
+				
 					size_type erase( const value_type& key)
 					{
 						return(this->_tree.remove(key));
 					}
+
+					void erase(iterator pos)
+					{
+						this->_tree.remove(*pos);
+						
+					}
+					void erase (iterator first, iterator last)
+					{
+						while (first != last)
+						{
+							this->_tree.remove(*first++);
+						
+						}
+
+					}
+
+
 
 					void				swap( set &other){this->_tree.swap(other._tree);}
 
