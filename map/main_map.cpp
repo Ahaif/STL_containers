@@ -15,78 +15,44 @@
 #include <vector>
 
 
-
-void run_uni_test( std::vector<int> v1,  std::vector<int> v2)
-{
-    for(int i = 0; i< v2.size(); i++)
-    {
-        if(v1[i] != v2[i])
-            std::cout << "different case" << i << std::endl;
-    }
-    std::cout<<"test passed successful"<< std::endl;
-
-}
+#define _ratio 10000
 
 
 
-
-
-std::vector<int>    reverse_iterators_test_std() {
-    std::vector<int> v;
-
-    std::map<int, int> mp;
-    mp.insert(std::make_pair(5, 5));
-    mp.insert(std::make_pair(3, 3));
-    mp.insert(std::make_pair(7, 7));
-    typename std::map<int, int>::reverse_iterator rit = mp.rbegin();
-    typename std::map<int, int>::reverse_iterator rit2 = mp.rend();
-    v.push_back(rit->first);
-    rit++;
-    rit2--;
-    v.push_back(rit->first);
-    v.push_back(rit2->first);
-    rit++;
-    v.push_back(*rit == *rit2);
-    rit2--;
-    v.push_back(rit->first);
-    v.push_back(rit2->first);
-    v.push_back(*rit2 > *rit);
-    v.push_back(*rit2 < *rit);
-    v.push_back((--rit)->first);
-    v.push_back((++rit2)->first);
-    v.push_back((rit--)->first);
-    v.push_back((rit2++)->first);
-    return v;
-}
 
 
 
 int main() {
 
     std::vector<int> v;
-
     _map<int, int>mp;
-    mp.insert(_make_pair(5, 5));
-    mp.insert(_make_pair(3, 3));
-    mp.insert(_make_pair(7, 7));
-    typename _map<int, int>::reverse_iterator rit = mp.rbegin();
-    typename _map<int, int>::reverse_iterator rit2 = mp.rend();
-    v.push_back(rit->first);
-    rit++;
-    rit2--;
-    v.push_back(rit->first);
-    v.push_back(rit2->first);
-    rit++;
-    v.push_back(*rit == *rit2);
-    rit2--;
-    v.push_back(rit->first);
-    v.push_back(rit2->first);
-    v.push_back(*rit2 > *rit);
-    v.push_back(*rit2 < *rit);
-    v.push_back((--rit)->first);
-    v.push_back((++rit2)->first);
-    v.push_back((rit--)->first);
-    v.push_back((rit2++)->first);
+    int j;
+    v.push_back(mp.erase(3));
+    for (int i = 0, j = 0; i < 30 * _ratio; ++i, ++j)
+        mp.insert(_make_pair(i, j));
+     _map<int, int>::iterator it = mp.begin();
+    v.push_back(it->first);
+    v.push_back(mp.erase(-5));
+    v.push_back(mp.size());
+    v.push_back(mp.erase(0));
+    v.push_back(mp.size());
+    it = mp.begin();
+    v.push_back(it->first);
+     _map<int, int>::iterator it4 = mp.begin();
+    for (; it4 != mp.end(); it4 = mp.begin())
+        mp.erase(it4->first);
+    v.push_back(mp.erase(30 * _ratio - 1));
+    v.push_back(mp.size());
+    _map<int, int> mp2;
+    for (int i = 0, j = 0; i < 10 ; ++i, ++j)
+        mp2.insert(_make_pair(i, j));
+    mp2.erase(2);
+    mp2.erase(7);
+    typename _map<int, int>::iterator it3 = mp2.begin();
+    for (; it3 != mp2.end(); ++it3) {
+        v.push_back(it3->first);
+        v.push_back(it3->second);
+    }
 
     // run_uni_test(v, reverse_iterators_test_std());
 

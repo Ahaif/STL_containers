@@ -6,7 +6,7 @@
 /*   By: ahaifoul <ahaifoul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 10:35:45 by ahaifoul          #+#    #+#             */
-/*   Updated: 2023/02/23 17:43:05 by ahaifoul         ###   ########.fr       */
+/*   Updated: 2023/03/10 20:38:25 by ahaifoul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,21 +140,17 @@ namespace ft
 					first++;
 				};
 			};
-			void					erase (iterator position) { this->_tree.remove(*position); };
+			void					erase (iterator position) { this->_tree.remove(*position.first); };
 			size_type				erase (const key_type& k)
 			{
-				size_type s = size();
-				this->_tree.remove(*find(k));
-				return (s - size());
+				return(this->_tree.remove(k));
 			};
 			void					erase (iterator first, iterator last)
 			{
-				iterator position;
-				while(first != last)
+				while (first != last)
 				{
-					position = first;
-					first++;
-					erase(position);
+					this->_tree.remove(*first);
+						
 				}
 			};
 			void					swap (map& x) { this->_tree.swap(x._tree); };

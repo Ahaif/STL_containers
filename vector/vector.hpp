@@ -6,7 +6,7 @@
 /*   By: ahaifoul <ahaifoul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:10:58 by ahaifoul          #+#    #+#             */
-/*   Updated: 2023/02/10 16:36:33 by ahaifoul         ###   ########.fr       */
+/*   Updated: 2023/03/11 13:18:27 by ahaifoul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,10 @@ namespace ft
             vector (InputIterator first, InputIterator last,const allocator_type& alloc = allocator_type()):
                     _alloc(alloc), _size(0), _capacity(0), _vec(nullptr)
             {
-                assign(first, last);};
-                vector (const vector& x): _vec(nullptr), _size(0), _capacity(0) { *this = x;
+                assign(first, last);
+            };
+
+            vector (const vector& x): _vec(nullptr), _size(0), _capacity(0) { *this = x;
             };
 
             //DESTRUCTORS
@@ -110,6 +112,7 @@ namespace ft
                 clear();
                 if (len > capacity())
                 {
+            
                     this->_alloc.deallocate(this->_vec, capacity());
                     this->_vec = this->_alloc.allocate(len);
                     this->_capacity = len;
@@ -122,7 +125,7 @@ namespace ft
             {
                 difference_type diff = end() - position;
 				if (this->_size == this->_capacity)
-						reserve(capacity() + 1);
+						reserve(capacity() * 2);
 				iterator	it = end();
 				while (diff != 0)
 				{
@@ -186,7 +189,12 @@ namespace ft
             void clear()
 			{
 				for (size_t i = 0; i < this->_size; i++)
-					this->_alloc.destroy(&this->_vec[i]);
+                {
+                    this->_alloc.destroy(&this->_vec[i]);
+    
+
+                }
+			
 				this->_size = 0;
 			};
 
@@ -267,6 +275,7 @@ namespace ft
 
             void    resize (size_type n, value_type val = value_type())
             {
+               
                 if (n != this->_size)
                 {
                     value_type* temp = this->_alloc.allocate(n);
@@ -284,17 +293,18 @@ namespace ft
                     }
                     else if (n > this->_size)
                     {
-                        for(size_t i; i < this->_size; i++)
+                        if (n > this->_capacity)
+                            this->_capacity = _capacity * 2;
+                        for(size_t i = 0; i < this->_size; i++)
                         {
                             this->_alloc.construct(temp + i, this->_vec[i]);
                             this->_alloc.destroy(&this->_vec[i]);
                         }
                         this->_alloc.deallocate(this->_vec, capacity());
-                        for (size_t i = 0; i < n; i++)
+                        for (size_t i; i < n; i++)
                             this->_alloc.construct(temp + i, val);
                         this->_size = n;
-                        if (n > this->_capacity)
-                            this->_capacity = n;
+                        
                         this->_vec = temp;
                     }
                     

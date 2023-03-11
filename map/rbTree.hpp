@@ -203,64 +203,65 @@ namespace ft
 			Node_ptr insertFixup(Node_ptr node)
 			{
 				
-				while(node && node->color == RED && node->parent->color == RED)
+				while (node && node->color == RED && node->parent->color == RED)
+				{
+					if (node->parent == node->parent->parent->left)
 					{
-						if(node->parent == node->parent->parent->left)
-			 			{
-							Node_ptr right_sibling = node->parent->parent->right;
-							if(right_sibling && right_sibling->color == RED)
-							{
-								node->parent->color = BLACK;
-								right_sibling->color = BLACK;
-								node = node->parent->parent;
-								if(node->parent->parent)
-									node->parent->parent->color = RED;
-
-							}
-							else
-							{
-								Node_ptr grandparent = node->parent->parent;
-								if (node == node->parent->right)
-								{
-									leftRotate(grandparent->left);
-								}
-								rightRotate(grandparent);
-								node->color = BLACK;
-								node->left->color = RED;
-								node->right->color = RED;
-							}
+						Node_ptr grandparent = node->parent->parent;
+						Node_ptr right_sibling = node->parent->parent->right;
+						if (right_sibling && right_sibling->color == RED)
+						{
+							if (grandparent != this->_root)
+								grandparent->color = RED;
+							if (grandparent->left)
+								grandparent->left->color = BLACK;
+							if (grandparent->right)
+								grandparent->right->color = BLACK;
+							node = grandparent;
 						}
 						else
 						{
-							Node_ptr left_sibling = node->parent->parent->left;
-							if(left_sibling && left_sibling->color == RED)
+							if (node == node->parent->right)
 							{
-								node->parent->color = BLACK;
-								left_sibling->color = BLACK;
-								node->parent->parent->color = RED;
-								node = node->parent->parent;
-
+								grandparent->left = leftRotate(grandparent->left);
 							}
-							else
-							{
-								if(node->parent == node->parent->parent->right)
-								{
-									
-									node = node->parent;
-									node->color = BLACK;
-									node->parent->color = RED;
-									leftRotate(node->parent);
-									
-								}
-							}
-
+							Node_ptr tmp = rightRotate(grandparent);
+							tmp->color = BLACK;
+							tmp->left->color = RED;
+							tmp->right->color = RED;
 						}
-						// node = node->parent->parent;
-						this->_root->color = BLACK;
-						
 					}
+					else
+					{
+						Node_ptr grandparent = node->parent->parent;
+						Node_ptr left_sibling = node->parent->parent->left;
+						if (left_sibling && left_sibling->color == RED)
+						{
+							if (grandparent != this->_root)
+								grandparent->color = RED;
+							if (grandparent->left)
+								grandparent->left->color = BLACK;
+							if (grandparent->right)
+								grandparent->right->color = BLACK;
+							node = grandparent;
+						}
+						else
+						{
+							if (node == node->parent->left)
+							{
+								grandparent->right = rightRotate(grandparent->right);
+							}
+							Node_ptr tmp = leftRotate(grandparent);
+							tmp->color = BLACK;
+							tmp->left->color = RED;
+							tmp->right->color = RED;
+						}
+					}
+					// node = node->parent->parent;
+					this->_root->color = BLACK;
+				}
 
-					return(nullptr);
+				return (nullptr);
 
 			}
 
@@ -287,81 +288,77 @@ namespace ft
 				return(newNode);
 			}
 
-			// void x_right_case(Node_ptr x, Node_ptr w)
-			// {
-			// 	if (w->color == RED) {
-			// 		w->color = BLACK;
-			// 		x->parent->color = RED;
-			// 		rightRotate(x->parent);
-			// 		w = x->parent->left;
-			// 	}
-			// 	if (w->left->color == BLACK && w->right->color == BLACK) {
-			// 		w->color = RED;
-			// 		x = x->parent;
-			// 	} else {
-			// 		if (w->left->color == BLACK) {
-			// 		w->right->color = BLACK;
-			// 		w->color = RED;
-			// 		leftRotate(w);
-			// 		w = x->parent->left;
-			// 		}
-			// 		w->color = x->parent->color;
-			// 		x->parent->color = BLACK;
-			// 		w->left->color = BLACK;
-			// 		rightRotate(x->parent);
-			// 		x = this->_root;
-			// 	}
+		void x_right_case(Node_ptr &node, Node_ptr &sibling, Node_ptr &parent)
+		{
+			// std::cout<<"right case  node is:  "<<x->key<< " color is: "<<x->color<<std::endl;
+			// std::cout << "right case  node is:  " << node->key << " color is: " << node->color << std::endl;
+					if (sibling->color == RED)
+					{
+						// WR
+						sibling->color = BLACK;
+						parent->color = RED;
 
-			// }
+						rightRotate(parent);
+						sibling = parent->right;
+						if(sibling == nullptr)
+							return;
+					}
+					if (get_color(sibling) == BLACK && get_color(sibling->left) == BLACK && get_color(sibling->right) == BLACK)
+					{
 
-
-			void x_right_case(Node_ptr x, Node_ptr w, Node_ptr parent)
-			{
-				std::cout<<"right case  node is:  "<<x->key<< " color is: "<<x->color<<std::endl;
-						if (w->color == RED)
+						sibling->color = RED;
+						// parent->color = BLACK;
+						node = parent;
+					
+					}
+					else
+					{
+						// std::cout << "pass by " << std::endl;
+						if (get_color(sibling->right) == BLACK)
 						{
-							//WR
-							w->color = BLACK;
-							parent->color = RED;
-							
-							rightRotate(parent);
-							w = parent->left;
-						}
+							sibling->left->color = BLACK;
+							sibling->color = RED;
 
-						if(get_color(w->left) == BLACK && get_color(w->right) == BLACK)
-						{
-							
-							w->color = RED;
-							x = parent;
-						}
-						else
-						{
-							if(get_color(w->left) == BLACK)
-							{
-								w->left->color = BLACK;
-								w->color = RED;
-								leftRotate(w);
-								w = parent->right;
-
-							}
-							w->color = parent->color;
-							parent->color = BLACK;
-							// if(w->left)
-								w->left->color = BLACK;
-							rightRotate(parent);
-							x = this->_root;
-
+							leftRotate(sibling);
+							sibling = parent->right;
+							if(sibling == nullptr)
+								return;
 						}
 					
-			}
+						int tmp = 0;
+						tmp = parent->color;
+						parent->color = sibling->color;
+						sibling->color = tmp;
+						// sibling->color = parent->color;
+						// sibling->parent->color = BLACK;
+						// if(w->right)
+						
+						rightRotate(parent);
+						sibling->right->color = BLACK;
+						node = this->_root;
+					}
+		}
 
-
-			void transplant(Node_ptr u, Node_ptr v)
+		void transplant(Node_ptr &u, Node_ptr &v)
+		{
+			if (v == nullptr)
 			{
-				
-				if(u == this->_root)
+				if (u == this->_root)
 				{
-					
+					this->_root = this->_end;
+					this->_end->left = this->_root;
+				}
+				else if (u == u->parent->left)
+					u->parent->left = nullptr;
+				else if (u == u->parent->right)
+				{
+					u->parent->right = nullptr;
+				}
+			}
+			else
+			{
+				if (u == this->_root)
+				{
 					this->_root = v;
 					this->_end->left = v;
 					// std::cout<<"change root to: "<< this->_root->key<<std::endl;
@@ -370,17 +367,15 @@ namespace ft
 				{
 					u->parent->left = v;
 				}
-				else if(u == u->parent->right)
+				else if (u == u->parent->right)
 				{
-					
+
 					u->parent->right = v;
-					
 				}
-				
-				if(v != nullptr)
-					v->parent = u->parent;
-				
+				v->parent = u->parent;
 			}
+		}
+
 
 			bool get_color(Node_ptr node)
 			{
@@ -391,156 +386,228 @@ namespace ft
 			}
 			
 
-			void	delete_Fixup(Node_ptr x, Node_ptr w)
-			{
-				//4 types of fixes
-				//WR
-				//WB-LRB
-				//WB-LB_RR
-				//WB-LR_RB
-				
-				// std::cout<<"delete fix up  node is:  "<<x->key<< " color is: "<<x->color<<std::endl;
-				// std::cout<<"delete fix up  sibling is:  "<<w->key<< " color is: "<<w->color<<std::endl;
+			void delete_Fixup(Node_ptr &node, Node_ptr &parent, int color)
+		{
+			// 4 types of fixes
+			// WR
+			// WB-LRB
+			// WB-LB_RR
+			// WB-LR_RB
 
-				Node_ptr parent = nullptr;
-				
-
-				while(x->parent != this->_root && x->color == BLACK)
-				{
-					parent = w->parent;
+			if (color != BLACK) // node is leaf DB
+				return;
 	
-					if(w == parent->right)
-					{
-						std::cout<<"left case  node is:  "<<x->key<< " color is: "<<x->color<<std::endl;
-						
-						if (w->color == RED)
-						{
-							//WR
-							w->color = BLACK;
-							parent->color = RED;
-							
-							leftRotate(parent);
-							w = parent->right;
-						}
-
-						if(get_color(w->left) == BLACK && get_color(w->right) == BLACK)
-						{
-							w->color = RED;
-							x = parent;
-						}
-						else
-						{
-							if(get_color(w->right) == BLACK)
-							{
-								w->left->color = BLACK;
-								w->color = RED;
-								
-								rightRotate(w);
-								w = parent->right;
-
-							}
-							w->color = parent->color;
-							parent->color = BLACK;
-							// if(w->right)
-								w->right->color = BLACK;
-							leftRotate(parent);
-							x = this->_root;
-
-						}
-					}
-					else
-						x_right_case(x, w, parent);
-
-					w = get_sibling(x);				
-					x->color = BLACK;
-				}
-				
-
-			}
-			Node_ptr	get_sibling(Node_ptr node)
-   			 {
-				if (node == NULL || node->parent == this->_root || node == this->_end)
-					return NULL;
-				if (node->parent->right == node)
-				{
-					return node->parent->left;
-				}
-				return node->parent->right;
-   			 }
-
-			Node_ptr _delete(Node_ptr root, Node_ptr node)
+			node->color = color;
+			Node_ptr sibling = get_sibling(node);
+			if(sibling == nullptr)
 			{
-				//transplant help us move subtree within rb tree (3condition)
-				
-				Node_ptr y = node;
-				Node_ptr sibling = nullptr;
-
-				if(node == node->parent->left)
-					sibling = node->parent->right;
-				else
-					sibling = node->parent->left;
-
-
-				Node_ptr x = nullptr;
-				int y_color = y->color;
-			
-				if(node->left == nullptr)
-				{
-					x = node->right;
-					transplant(node, x);
-				}
-				else if (node->right == nullptr)
-				{
-					x = node->left;
-					transplant(node, x);
-				}
-				else
-				{
-					y = _TreeMin(node->right);
-					y_color = y->color;
-					x = y->right;
-
-					if(y->parent == node)
-					{
-						if(x != nullptr)
-							x->parent = y;
-							
-					}
-					else
-					{
-						transplant(y,y->right);
-						y->right = node->right;
-						y->right->parent = y;
-						
-					}
-					transplant(node, y);
-					
-					y->left = node->left;
-					y->left->parent = y;
-					y->color = node->color;
-
-				}
-
-				if(y_color == BLACK)
-				{
-					
-					if(x != nullptr)
-					{
-						// std::cout<<"passed delete fixup"<<std::endl;
-						delete_Fixup(x, sibling);
-						
-					}
-					else
-					{
-						// std::cout<<"passed delete fixup 2 "<<std::endl;
-						delete_Fixup(node, sibling);
-						
-					}
-				}
-				delete node;
-				this->_size--;
-				return(this->_root);
+				node->color = BLACK;
+				return;
 			}
+				
+
+				
+				// Node_ptr parent = node->parent;
+
+			while (node != this->_root && node->color == BLACK)
+			{
+				// std::cout<<"delete fix_up"<<std::endl;
+				parent = sibling->parent;
+				if (sibling == parent->right)
+				{
+					// std::cout << "left case  node is:  " << node->key << " color is: " << node->color << std::endl;
+
+					if (sibling->color == RED)
+					{
+						// WR
+						sibling->color = BLACK;
+						parent->color = RED;
+
+						leftRotate(parent);
+						sibling = parent->right;
+						if(sibling == nullptr)
+							break;
+						
+					}
+					if (get_color(sibling) == BLACK && get_color(sibling->left) == BLACK && get_color(sibling->right) == BLACK)
+					{
+
+						sibling->color = RED;
+						// parent->color = BLACK;
+						node = parent;
+						
+					}
+					else
+					{
+						
+						if (get_color(sibling->right) == BLACK)
+						{
+							sibling->left->color = BLACK;
+							sibling->color = RED;
+
+							rightRotate(sibling);
+							sibling = parent->right;
+							if(sibling == nullptr)
+								break;
+						}
+						int tmp = 0;
+						tmp = parent->color;
+						parent->color = sibling->color;
+						sibling->color = tmp;
+						// sibling->color = parent->color;
+						// sibling->parent->color = BLACK;
+						// if(w->right)
+						
+						leftRotate(parent);
+						sibling->right->color = BLACK;
+						node = this->_root;
+					}
+				}
+				else
+					x_right_case(node, sibling, parent);
+				sibling = get_sibling(node);
+				if(sibling == nullptr)
+					break;
+			}
+			
+			node->color = BLACK;
+		}
+		Node_ptr get_sibling(Node_ptr const &node)
+		{
+			if (node == nullptr || node == this->_root)
+				return NULL;
+			if (node->parent->right == node)
+			{
+				return node->parent->left;
+			}
+			return node->parent->right;
+		}
+
+		Node_ptr _delete(Node_ptr &root, Node_ptr &node)
+		{
+
+			// transplant help us move subtree within rb tree (3condition)
+
+			// std::cout <<"node is:" << node->key <<std::endl;
+
+			if (node == nullptr)
+				return nullptr;
+
+			Node_ptr parent = node->parent;
+			Node_ptr right = node->right;
+			Node_ptr left = node->left;
+
+			Node_ptr tmp = node;
+			int original_color = node->color;
+
+			if (left == nullptr && right == nullptr)
+			{
+
+				if (node == this->_root)
+				{
+					// update -root
+					_alloc.destroy(node);
+					_alloc.deallocate(node, 1);
+					this->_root = this->_end;
+					this->_end->left = this->_root;
+					return nullptr;
+				}
+				else if (node == parent->left)
+				{
+
+					transplant(node, left);
+					// _alloc.destroy(node);
+					// _alloc.deallocate(node, 1);
+				}
+				else
+				{
+					transplant(node, right);
+					// _alloc.destroy(node);
+					// _alloc.deallocate(node, 1);
+				}
+				// if (this->_root)
+				if(left == nullptr)
+					delete_Fixup(tmp, parent, original_color);
+				else
+					delete_Fixup(left, parent, original_color);
+				_alloc.destroy(node);
+				_alloc.deallocate(node, 1);
+			}
+			else if (left == nullptr)
+			{
+				transplant(node, node->right);
+
+				_alloc.destroy(node);
+				_alloc.deallocate(node, 1);
+
+				if(right == nullptr)
+					delete_Fixup(tmp, parent, original_color);
+				else
+					delete_Fixup(right, parent, original_color);
+
+				// if node is black delete fix up on node right = x
+			}
+
+			else if (right == nullptr)
+			{
+	
+				transplant(node, node->left);
+
+				_alloc.destroy(node);
+				_alloc.deallocate(node, 1);
+
+				std::cout << original_color << std::endl;
+
+				if(left == nullptr)
+					delete_Fixup(tmp, parent, original_color);
+				else
+					delete_Fixup(left, parent, original_color);
+
+				// if node is black delete fix up on node left = x
+			}
+			else
+			{
+
+				Node_ptr success = _TreeMin(right);
+				original_color = success->color;
+				if (success->parent == node)
+				{
+					if (node == this->_root)
+					{
+						this->_root = success;
+						success->parent = this->_end;
+						this->_end->left = this->_root;
+					}
+					else
+					{
+						success->parent = parent;
+						parent->right = success;
+					}
+				}
+				else
+				{
+			
+					transplant(success, success->right);
+					success->right = node->right;
+					success->right->parent = success;
+				}
+				transplant(node, success);
+				success->left = node->left;
+				success->left->parent = success;
+				_alloc.destroy(node);
+				_alloc.deallocate(node, 1);
+				// delete fix up succes ->right  = x
+				if(success->right == nullptr)
+					delete_Fixup(tmp, parent, original_color);
+				else
+					delete_Fixup(success, parent, original_color);
+
+
+				
+			}
+
+			return (this->_root);
+		}
 			
 		public:
 			Node_ptr create_node(value_type key)
@@ -628,7 +695,7 @@ namespace ft
 			
 			
 			//erase
-			size_t	remove(value_type const &value)
+			size_t	remove(key_type const &value)
 			{
 				Node_ptr node = search(value);
 				if(node != this->_end)

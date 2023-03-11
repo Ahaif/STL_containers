@@ -57,9 +57,6 @@ namespace ft
 					explicit set(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _tree(comp, alloc), _alloc(alloc), _comp(comp)
 					{
 					};
-					// template< class InputIt >
-					// set( InputIt first, InputIt last,const Compare& comp = Compare(),const Allocator& alloc = Allocator() );
-
 					template< class InputIt >
 					set( InputIt first, InputIt last, \
 					 const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
