@@ -6,7 +6,7 @@
 /*   By: ahaifoul <ahaifoul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:10:58 by ahaifoul          #+#    #+#             */
-/*   Updated: 2023/03/11 13:18:27 by ahaifoul         ###   ########.fr       */
+/*   Updated: 2023/03/14 14:19:55 by ahaifoul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,15 @@ namespace ft
             ~vector(){
                     if (this->_vec != nullptr)
                     {   
-                        clear();
+                       for(size_t i = 0; i < this->_size; i++)
+                        {
+                            
+                            this->_alloc.destroy(&this->_vec[i]);
+                        
+                        }
+                        _alloc.deallocate(_vec, _capacity);
+                        // _size = 0;
+                        // _capacity = 0;
                     }
                };
 
@@ -165,9 +173,23 @@ namespace ft
            template <class InputIterator>
             void insert (iterator position, InputIterator first,typename ft::enable_if<!is_integral<InputIterator>::value, InputIterator>::type last)
             {
+                vector tmp(first, last);
+                if (tmp.size() == 0)
+                {
+                     return;
+                }
+                   
+
+            
+                
+                    if (first > last || ((position <= begin()) && (position > end()))) {
+                        return;
+                }
+
                 difference_type	diff = end() - position;
 				difference_type	len	= last - first;
 				difference_type posIndex = position - begin();
+                
 				if (size() + len > capacity())
 				{
 					if (size() + len > capacity() * 2)
@@ -182,20 +204,20 @@ namespace ft
 					it--;
 				}
 				it = begin() + posIndex;
-				for (size_t i = 0; i < len; i++)
+                int i = 0;
+				for (; i < len; i++)
 					*(it + i) = *(first++);
-				this->_size += len;
+				_size = _size + len;
+        
             }
+
+            
             void clear()
 			{
-				for (size_t i = 0; i < this->_size; i++)
-                {
-                    this->_alloc.destroy(&this->_vec[i]);
-    
 
-                }
-			
-				this->_size = 0;
+                erase(begin(), end());
+            
+				
 			};
 
             void push_back (const value_type& val)
@@ -216,13 +238,19 @@ namespace ft
 
             void swap (vector& x)
 			{
+       
 				std::swap(x._size, this->_size);
 				std::swap(x._capacity, this->_capacity);
 				std::swap(x._alloc, this->_alloc);
 				std::swap(x._vec, this->_vec);
+
+
 			};
             iterator erase (iterator position)
             {
+
+                
+
                 iterator it = position;
 				this->_alloc.destroy(it.base());
 				while (it != end() - 1)
@@ -234,19 +262,32 @@ namespace ft
 				return (position);
             };
 
+
+
             iterator erase (iterator first, iterator last)
             {
-                iterator		it = first;
-				difference_type	len = last - first;
-				for (size_t i = 0; i < len; i++)
-					this->_alloc.destroy((first + i).base());
-				while (it != end())
-				{
-					*(it) = *(it + len);
-					it++;
-				}
-				this->_size -= len;
-				return (first);
+               
+                // if (*last < *first || *first < *(begin()) || *last > *(end())) {
+                //         return last;
+                //     }
+                if (last < first || first < begin() || last > end()) {
+                    return end();
+                }
+                difference_type	len = last - first;
+                iterator it = first;
+                while (last != end()) {
+                    *it = std::move(*last);
+                    ++it;
+                    ++last;
+                }
+
+                for (; it != end(); ++it) {
+                    _alloc.destroy(it.base());
+                }
+
+                _size -= len;
+                return first;
+
             };
 
          public : /*   ------CAPACITY-------------  */

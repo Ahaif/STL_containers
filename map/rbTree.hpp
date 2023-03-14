@@ -701,6 +701,7 @@ namespace ft
 				if(node != this->_end)
 				{
 					_delete(this->_root, node);
+					this->_size--;
 					return(1);
 				}
 				else

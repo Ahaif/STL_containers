@@ -22,27 +22,20 @@ void run_uni_test(std::vector<int> myTest, std::vector<int> stdTest)
 {
     if (myTest.size() != stdTest.size())
         std::cout<<"size issue"<<std::endl;
-    for(int i = 0; i < stdTest.size(); i++)
-    {
-        if(myTest[i] != stdTest[i])
-        {
+   
+            std::cout<<"std size: "<<stdTest.size()<<std::endl;
+            std::cout<<"myTest size: "<<myTest.size()<<std::endl;
                 std::cout<<"my vec test | std vec:"<<std::endl;
-                for(int j = 0; j<=i; j++)
+                for(int j = 0; j < stdTest.size(); j++)
                 {
                     std::cout<<myTest[j]<<"|";
                     std::cout<<stdTest[j]<<"|"<<std::endl;
 
                     
                 }
-                std::cout<<"test case " << i << " is diffrent: " << myTest[i]<< stdTest[i] <<std::endl;
-                
-
-        }
-            
-    }
-
+      
+    std::cout<<"passed unitest"<<std::endl;
 }
-
 
 
 
@@ -50,17 +43,25 @@ void run_uni_test(std::vector<int> myTest, std::vector<int> stdTest)
 std::vector<int> std_test() {
     std::vector<int> v;
     std::vector<int>vector;
+   
 
-    for (int i = 0; i < 9900 * _ratio; ++i)
-        vector.push_back(i);
-    
-    
-    v.push_back(*(vector.erase(vector.begin() + 8 * _ratio, vector.end() - 1500 * _ratio)));
- 
+    std::vector<int> tmp, tmp2;
 
-    v.push_back(*(vector.begin() + 82 * _ratio));
+    vector.assign(3, 3);
+    tmp.assign(4000 * _ratio, 1);
+    tmp2.assign(4 * _ratio, 1);
+  
+  
+    vector.assign(tmp.begin(), tmp.end());
+    v.push_back(vector[1]);
     v.push_back(vector.size());
     v.push_back(vector.capacity());
+    vector.assign(tmp2.begin(), tmp2.end());
+
+    v.push_back(vector[444]);
+    v.push_back(vector.size());
+    v.push_back(vector.capacity());
+
 
     return v;
 }
@@ -71,24 +72,31 @@ std::vector<int> std_test() {
 int main()
 {
 
-      std::vector<int> v;
-    
     _vector<int>vector;
- 
-    for (int i = 0; i < 9900 * _ratio; ++i)
-        vector.push_back(i);
-
-    
-    
-
-    v.push_back(*(vector.erase(vector.begin() + 8 * _ratio, vector.end() - 1500 * _ratio)));
+    std::vector<int> v;
  
 
-    // v.push_back(*(vector.begin() + 82 * _ratio));
-    // v.push_back(vector.size());
-    // v.push_back(vector.capacity());
 
-    // run_uni_test(v, std_test());
+    _vector<int> tmp, tmp2;
+    vector.assign(3, 3);
+    tmp.assign(4000 * _ratio, 1);
+    tmp2.assign(4 * _ratio, 1);
+  
+
+    vector.assign(tmp.begin(), tmp.end());
+    
+    v.push_back(vector[1]);
+    v.push_back(vector.size());
+    v.push_back(vector.capacity());
+    vector.assign(tmp2.begin(), tmp2.end());
+
+    v.push_back(vector[444]);
+    v.push_back(vector.size());
+    v.push_back(vector.capacity());
+
+
+
+    run_uni_test(v, std_test());
   
     
 }
