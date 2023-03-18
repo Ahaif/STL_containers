@@ -6,7 +6,7 @@
 /*   By: ahaifoul <ahaifoul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:10:55 by ahaifoul          #+#    #+#             */
-/*   Updated: 2023/02/15 10:14:34 by ahaifoul         ###   ########.fr       */
+/*   Updated: 2023/03/18 17:08:18 by ahaifoul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <string>
 #include <iterator>
 
-#include "../iterator_traits.hpp"
+#include "iterator_traits.hpp"
 
 
 namespace ft 

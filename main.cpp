@@ -1,15 +1,15 @@
 #include <iostream>
 #include <string>
 #include <deque>
-#if  1//CREATE A REAL STL EXAMPLE
+#if 1 //CREATE A REAL STL EXAMPLE
 	#include <map>
 	#include <stack>
 	#include <vector>
 	namespace ft = std;
 #else
-	#include "map/map.hpp"
-	#include "stack/stack.hpp"
-	#include "vector/vector.hpp"
+	#include <map.hpp>
+	#include <stack.hpp>
+	#include <vector.hpp>
 #endif
 
 #include <stdlib.h>
@@ -114,3 +114,10 @@ int main(int argc, char** argv) {
 	std::cout << std::endl;
 	return (0);
 }
+
+
+
+
+
+
+

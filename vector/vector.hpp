@@ -6,7 +6,7 @@
 /*   By: ahaifoul <ahaifoul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:10:58 by ahaifoul          #+#    #+#             */
-/*   Updated: 2023/03/14 14:19:55 by ahaifoul         ###   ########.fr       */
+/*   Updated: 2023/03/18 17:53:15 by ahaifoul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include <limits>
 #include "iterator.hpp"
 #include "utils.hpp"
-#include "../reverse_iterator.hpp"
+#include "reverse_iterator.hpp"
 
 namespace ft 
 {
@@ -59,10 +59,22 @@ namespace ft
             };
             // check if enable if is necessary
             template <class InputIterator>
-            vector (InputIterator first, InputIterator last,const allocator_type& alloc = allocator_type()):
-                    _alloc(alloc), _size(0), _capacity(0), _vec(nullptr)
+            vector (InputIterator first, typename ft::enable_if<!is_integral<InputIterator>::value, InputIterator>::type last,const allocator_type& alloc = allocator_type()):
+                    _alloc(alloc), _vec(nullptr), _size(0), _capacity(0)
             {
-                assign(first, last);
+                // try
+                // {
+                    assign(first, last);
+                // }
+                // catch(const std::exception& e)
+                // {
+                //     clear();
+                //     this->_alloc.deallocate(this->_vec, capacity());
+                // }
+                
+                
+                
+                
             };
 
             vector (const vector& x): _vec(nullptr), _size(0), _capacity(0) { *this = x;
@@ -71,18 +83,8 @@ namespace ft
             //DESTRUCTORS
         public:
             ~vector(){
-                    if (this->_vec != nullptr)
-                    {   
-                       for(size_t i = 0; i < this->_size; i++)
-                        {
-                            
-                            this->_alloc.destroy(&this->_vec[i]);
-                        
-                        }
-                        _alloc.deallocate(_vec, _capacity);
-                        // _size = 0;
-                        // _capacity = 0;
-                    }
+                    clear();
+                    _alloc.deallocate(_vec, _capacity);
                };
 
         public: /*             operator =                         */
@@ -102,6 +104,8 @@ namespace ft
         public :  /*   MODIFERS  */
             void assign (size_type n, const value_type& val)
             {
+                try{
+                
                 clear();
                 if (n > capacity())
                 {
@@ -110,24 +114,56 @@ namespace ft
                     this->_capacity = n;
                 }
                 for (size_t i = 0; i < n; i++)
+                {
                     this->_alloc.construct(this->_vec + i, val);
-                this->_size = n;
+                    _size++;
+
+                }
+                    
+                // this->_size = n;
+                }
+                catch(const std::bad_alloc& e)
+                {
+                    clear();
+                    this->_alloc.deallocate(this->_vec, capacity());
+                }
             }
             template <class InputIterator>
             void assign(InputIterator first, typename ft::enable_if<!is_integral<InputIterator>::value, InputIterator>::type last)
             {
-                difference_type len = last - first;
-                clear();
-                if (len > capacity())
-                {
-            
-                    this->_alloc.deallocate(this->_vec, capacity());
-                    this->_vec = this->_alloc.allocate(len);
-                    this->_capacity = len;
+                try{
+                        difference_type len = last - first;
+                        clear();
+                        if (static_cast<unsigned long>(len) > capacity())
+                        {
+                            this->_alloc.deallocate(this->_vec, capacity());
+                            this->_vec = this->_alloc.allocate(len);
+                            this->_capacity = len;
+                        
+                            
+                        }
+                        for (long i = 0; i < len; i++)
+                        {
+                            try{
+                                this->_alloc.construct(this->_vec + i, *(first + i));
+                                this->_size++;
+                            }
+                             catch(...)
+                            {
+                                clear();
+                                this->_alloc.deallocate(this->_vec, capacity());
+                                throw;
+                            }
+                        }
+
+                    this->_size = len;  
                 }
-                for (size_t i = 0; i < len; i++)
-                    this->_alloc.construct(this->_vec + i, *(first + i));
-                this->_size = len;          
+                catch(const std::bad_alloc& e)
+                {
+                    clear();
+                    this->_alloc.deallocate(this->_vec, capacity());
+                }
+  
             }
             iterator insert (iterator position, const value_type& val)
             {
@@ -173,51 +209,64 @@ namespace ft
            template <class InputIterator>
             void insert (iterator position, InputIterator first,typename ft::enable_if<!is_integral<InputIterator>::value, InputIterator>::type last)
             {
-                vector tmp(first, last);
-                if (tmp.size() == 0)
-                {
-                     return;
-                }
-                   
 
-            
-                
-                    if (first > last || ((position <= begin()) && (position > end()))) {
+
+                try{
+                    
+                    vector tmp(first, last);
+   
+                    if (tmp.size() == 0)
+                    {
+                        std::cout<<"passed: "<<tmp.capacity()<<std::endl;
                         return;
-                }
+                    }
+                    if (first > last || ((position <= begin()) && (position > end()))) {
+                        std::cout<<"passed: "<<std::endl;
+                        return;
+                    }
 
-                difference_type	diff = end() - position;
-				difference_type	len	= last - first;
-				difference_type posIndex = position - begin();
-                
-				if (size() + len > capacity())
-				{
-					if (size() + len > capacity() * 2)
-						reserve(size() + len);
-					else
-						reserve(capacity() * 2);
-				}
-				iterator it = end() - 1;
-				for (size_t i = 0; i < diff; i++)
-				{
-					*(it + len) = *(it);
-					it--;
-				}
-				it = begin() + posIndex;
-                int i = 0;
-				for (; i < len; i++)
-					*(it + i) = *(first++);
-				_size = _size + len;
+                    difference_type	diff = end() - position;
+                    difference_type	len	= last - first;
+                    difference_type posIndex = position - begin();
+                    
+                    if (size() + len > capacity())
+                    {
+                        if (size() + len > capacity() * 2)
+                        {
+                            
+
+                            reserve(size() + len);
+                        }
+                        else
+                        {
+                            reserve(capacity() * 2);
+                        }
+                    }
+                    iterator it = end() - 1;
+                    for (long i = 0; i < diff; i++)
+                    {
+                        *(it + len) = *(it);
+                        it--;
+                    }
+                    it = begin() + posIndex;
+                    int i = 0;
+                    for (; i < len; i++)
+                        *(it + i) = *(first++);
+                    _size = _size + len;
+                }
+                catch(const std::bad_alloc& e)
+                {
+                    clear();
+                    this->_alloc.deallocate(this->_vec, _capacity);
+                }
         
             }
 
             
             void clear()
 			{
-
-                erase(begin(), end());
-            
-				
+                while (_size != 0)
+                    pop_back();
 			};
 
             void push_back (const value_type& val)
@@ -233,6 +282,7 @@ namespace ft
             void pop_back()
             {
                 this->_alloc.destroy(this->_vec + this->_size);
+                // this->_alloc.deallocate(this->_vec[_size], 1);
                 --this->_size;
             }
 
@@ -302,7 +352,7 @@ namespace ft
                     value_type*		temp = this->_alloc.allocate(n);
                     if (this->_vec != NULL)
                     {
-                        for (int i = 0; i < size(); i++)
+                        for (size_t i = 0; i < size(); i++)
                         {
                             this->_alloc.construct(temp + i, this->_vec[i]);
                             this->_alloc.destroy(this->_vec + i);
@@ -311,6 +361,7 @@ namespace ft
                     }
                     this->_capacity = n;
                     this->_vec = temp;
+                   
                 }
             };
 

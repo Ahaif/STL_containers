@@ -54,27 +54,32 @@ namespace ft
 
 				public:
 					//MEMBER FUNCTIONS-----------------------------------
-					explicit set(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _tree(comp, alloc), _alloc(alloc), _comp(comp)
-					{
-					};
+					explicit set(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()):
+					 _tree(comp, alloc), _alloc(alloc), _comp(comp){};
+
 					template< class InputIt >
 					set( InputIt first, InputIt last, \
 					 const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
 					 : _tree(comp, alloc), _alloc(alloc), _comp(comp)
 					{
 						insert(first, last);
-
 					}
 
-					~set(){this->_tree.clear();}
+					set (const set& x) { *this = x; };
+
+					~set(){}
 
 					set& operator=( const set& x)
 					{
-						  _tree.clear();
-                		for (const_iterator it = x.begin(); it != x.end(); ++it) {
-                    		this->_tree.insert(*it);
+
+						if (this != &x)
+						{
+							this->_tree.clear();
+							this->_comp = x._comp;
+							this->_alloc = x._alloc;
+							insert(x.begin(), x.end());
 						}
-						return(*this);
+						return (*this);
                 	}
 						
 

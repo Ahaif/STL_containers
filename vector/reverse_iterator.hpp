@@ -6,7 +6,7 @@
 /*   By: ahaifoul <ahaifoul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:10:55 by ahaifoul          #+#    #+#             */
-/*   Updated: 2023/02/23 20:14:37 by ahaifoul         ###   ########.fr       */
+/*   Updated: 2023/03/18 14:55:53 by ahaifoul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,8 @@
 #include <iostream>
 #include <string>
 #include <iterator>
-#include"rbTree.hpp"
-#include "iterator.hpp"
 
-#include "../iterator_traits.hpp"
+#include "iterator_traits.hpp"
 
 
 namespace ft 
@@ -89,4 +87,3 @@ namespace ft
 
 
 #endif 
-

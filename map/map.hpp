@@ -6,7 +6,7 @@
 /*   By: ahaifoul <ahaifoul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 10:35:45 by ahaifoul          #+#    #+#             */
-/*   Updated: 2023/03/14 11:55:56 by ahaifoul         ###   ########.fr       */
+/*   Updated: 2023/03/16 11:50:02 by ahaifoul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,13 +78,16 @@ namespace ft
         public: /*             constructor                         */
 			explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()):
 				_tree(comp, alloc), _alloc(alloc), _comp(comp) {};
+
 			template <class InputIterator>
 			map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()):
 				_tree(comp, alloc), _alloc(alloc), _comp(comp) { insert(first, last); };
+				
 			map (const map& x) { *this = x; };
 
 		public: /*             destructors                         */
-			~map() { this->_tree.clear(); };
+			~map() { };
+			// ;
 
 		public: /*             operator=                         */
 			map& operator= (const map& x)
@@ -126,11 +129,13 @@ namespace ft
 				Node_ptr inserted_node = this->_tree.insert(val);
 				return (ft::pair<iterator,bool>(iterator(inserted_node), true));
 			};
+			
 			iterator 				insert (iterator position, const value_type& val)
 			{
 					(void) position;
 					return (insert(val).first);
 			};
+			
 			template <class InputIterator>
 			void 					insert (InputIterator first, InputIterator last)
 			{

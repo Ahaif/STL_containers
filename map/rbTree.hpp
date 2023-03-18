@@ -21,6 +21,7 @@ namespace ft
 			Node*	parent;
 			Node*	left;
 			Node*	right;
+			
 			int		color;
 
 		public:
@@ -70,13 +71,19 @@ namespace ft
 			int											_size;
 		public:
 		/****************** Tree constructor and distructor ***********************/
-		rbTree(const key_compare &compare = key_compare(), const allocator_type& alloc = allocator_type()): _size(0), _comp(compare), _alloc(alloc)
-		{
-			this->_end = create_node(value_type());
-			this->_root = this->_end;
+			rbTree(const key_compare &compare = key_compare(), const allocator_type& alloc = allocator_type()): _alloc(alloc), _comp(compare), _size(0)
+			{
+				this->_end = create_node(value_type());
+				this->_root = this->_end;
 
-		}
-		~rbTree(){};
+			}
+			~rbTree()
+			{
+				clear();
+				_alloc.destroy(this->_end);
+				_alloc.deallocate(this->_end, 1);
+
+			};
 
 		private: // private
 			Node_ptr _search(Node_ptr temp, key_type key) const
@@ -86,9 +93,9 @@ namespace ft
 
 				if (temp->key.first == key)
 					return(temp);
-				else if(this->_comp(key, temp->key.first))
+				else if(this->_comp(key,temp->key.first))
 					return(_search(temp->left, key));
-				else if(this->_comp(temp->key.first, key))
+				else 
 					return(_search(temp->right, key));
 				
 
@@ -103,6 +110,7 @@ namespace ft
 					_clearTree(root->right);
 					this->_alloc.destroy(root);
 					this->_alloc.deallocate(root, 1);
+					root = NULL;
 
 				}
 			}
@@ -111,7 +119,7 @@ namespace ft
 				if(this->_root == this->_end)
 					return(this->_end);
 				Node_ptr temp = this->_root;
-				while(temp->left && temp->left != nullptr )
+				while(temp->left && temp->left != this->_end)
 					temp = temp->left;
 				return(temp);
 			}
@@ -273,17 +281,24 @@ namespace ft
 				while(x != nullptr)
 				{
 					t = x;
-					if(!this->_comp(x->key.first, newNode->key.first))
+					if(this->_comp(newNode->key.first,x->key.first))
 						x = x->left;
 					else if(this->_comp(x->key.first, newNode->key.first))
 						x = x->right;
+					else
+						{
+							_alloc.destroy(newNode);
+							_alloc.deallocate(newNode, 1);
+							return x;
+						}
 
 				}
 				newNode->parent = t;
-				if(!this->_comp(t->key.first, newNode->key.first))
+				if(this->_comp( newNode->key.first, t->key.first))
 					t->left = newNode;
 				else
 					t->right = newNode;
+					
 				insertFixup(newNode);
 				return(newNode);
 			}
@@ -483,7 +498,7 @@ namespace ft
 			return node->parent->right;
 		}
 
-		Node_ptr _delete(Node_ptr &root, Node_ptr &node)
+		Node_ptr _delete( Node_ptr &node)
 		{
 
 			// transplant help us move subtree within rb tree (3condition)
@@ -605,7 +620,6 @@ namespace ft
 
 				
 			}
-
 			return (this->_root);
 		}
 			
@@ -641,10 +655,10 @@ namespace ft
 			const_iterator	end() 	const 	{ return (const_iterator(this->_end));}
 
 
-			reverse_iterator		rbegin()		{return(reverse_iterator(iterator(_max())));}
-			const_reverse_iterator	rbegin() const {return(const_reverse_iterator(iterator(_max())));}
-			reverse_iterator		rend()			{return (reverse_iterator((iterator(_min() - 1))));}
-			const_reverse_iterator	rend() const 	{return(const_reverse_iterator((iterator(_min() - 1))));}
+			reverse_iterator		rbegin()		{return(reverse_iterator(--end()));}
+			const_reverse_iterator	rbegin() const {return(const_reverse_iterator(--end()));}
+			reverse_iterator		rend()			{return (reverse_iterator(--begin()));}
+			const_reverse_iterator	rend() const 	{return(const_reverse_iterator(--begin()));}
 
 
 			//CAPACITY-----------------------------------
@@ -666,6 +680,7 @@ namespace ft
 					_clearTree(this->_root);
 					this->_size = 0;
 					this->_root = this->_end;
+
 
 				}
 			}
@@ -700,12 +715,17 @@ namespace ft
 				Node_ptr node = search(value);
 				if(node != this->_end)
 				{
-					_delete(this->_root, node);
+					_delete(node);
 					this->_size--;
 					return(1);
 				}
 				else
+				{
+					node = NULL;
 					return(0);
+
+				}
+					
 			}
 
 
@@ -780,8 +800,8 @@ namespace ft
 
 				_print(root->right, level + 1);
 				for (int i = 0; i < level; i++)
-    			// 	std::cout << "    ";
-				// std::cout << root->key << "-"<<root->color <<std::endl;
+    				std::cout << "    ";
+				std::cout << root->key.first << "-"<<root->color <<std::endl;
 				_print(root->left, level + 1);
 
 				
@@ -792,7 +812,7 @@ namespace ft
 			{
 				Node_ptr node = this->_root;
 				_print(node, 0);
-				// std::cout<<"the root is: "<<node->key<<std::endl;
+				std::cout<<"the root is: "<<node->key.first<<std::endl;
 
 			}	
 
@@ -806,23 +826,9 @@ namespace ft
 		Node_ptr predecessor(Node_ptr node)
 		{
 		
-			
-			// if(node == nullptr && node->left)
-			// {
-			
-			// 	node = node->left;
-			// 	return (_TreeMax(node->left));
-
-			// }
 			if (node->left && node)
-			{
-		
-				
 				return (_TreeMax(node->left));
 
-					
-				
-			}
 			
 			Node_ptr temp = node->parent;
 			
@@ -831,7 +837,7 @@ namespace ft
 				node = temp;
 				temp = temp->parent;
 			}
-			if (temp == 0)
+			if (!temp)
 				return (node);
 			return (temp);
 			
@@ -861,16 +867,21 @@ namespace ft
 		template<class Node_ptr>
 		Node_ptr successor(Node_ptr node)
 		{
-		
+			
 			if (node->right)
 				return (_TreeMin(node->right));
-			
-
+		
 			Node_ptr temp = node->parent;
 			while (temp && temp->right == node)
 			{
 				node = temp;
 				temp = temp->parent;
+			}
+			if(!temp && node->left)
+			{
+				node = node->left;
+				return (_TreeMin(node->left));
+
 			}
 			return (temp);
 		};

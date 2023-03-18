@@ -4,8 +4,8 @@
 
 
 #include "vector.hpp"
-#include "../iterator_traits.hpp"
-#include "../reverse_iterator.hpp"
+#include "iterator_traits.hpp"
+#include "reverse_iterator.hpp"
 #include <iostream>
 #include <string>
 #include <iterator>

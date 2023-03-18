@@ -6,7 +6,7 @@
 /*   By: ahaifoul <ahaifoul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 10:35:55 by ahaifoul          #+#    #+#             */
-/*   Updated: 2023/02/23 17:45:41 by ahaifoul         ###   ########.fr       */
+/*   Updated: 2023/03/18 14:32:35 by ahaifoul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,20 @@ namespace ft
 
 			Node_ptr		base() const							{ return (this->_it); };
 			reference		operator*() const						{ return (this->_it->key); };
-			TreeIter&		operator++()							{this->_it = successor(this->_it); return (*this); };		// pre-increment
+			TreeIter&		operator++()							{
+
+				// if(_it->key.first == 0)
+				// {
+				// 	this->_it = _TreeMin(this->_it);
+				//  	return (*this); 
+
+				// }
+				// else
+				// {
+					this->_it = successor(this->_it);
+				 	return (*this);
+				// }
+				};		// pre-increment
 			TreeIter		operator++(int)							{ TreeIter temp(*this); ++(*this); return (temp); };		// post-increment
 			TreeIter&		operator--()							{this->_it = predecessor(this->_it); return (*this); };		// pre-decrement
 			TreeIter		operator--(int)							{ TreeIter temp(*this); --(*this); return (temp); };		// post-decrement

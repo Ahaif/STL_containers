@@ -6,7 +6,7 @@
 /*   By: ahaifoul <ahaifoul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 10:35:55 by ahaifoul          #+#    #+#             */
-/*   Updated: 2023/02/15 10:10:39 by ahaifoul         ###   ########.fr       */
+/*   Updated: 2023/03/18 18:08:55 by ahaifoul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <iostream>
 #include <string>
 #include "reverse_iterator.hpp"
-#include "../iterator_traits.hpp"
+#include "iterator_traits.hpp"
 
 namespace ft
 {

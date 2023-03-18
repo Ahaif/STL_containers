@@ -77,20 +77,20 @@ namespace ft
 			this->_end = create_node(value_type());
 			this->_root = this->_end;
 		}
-		~rbTree(){};
+		~rbTree()
+		{
+			clear();
+			_alloc.destroy(this->_end);
+			_alloc.deallocate(this->_end, 1);
 
-		// void print_tree()
-		// {
-		// 	std::cout << "----------------------------------------------" << std::endl;
-		// 	print2d(this->_root, 0);
-		// 	std::cout << "----------------------------------------------" << std::endl;
-		// }
+		};
+	
 
 	private: // private
 		Node_ptr _search(Node_ptr const &temp, value_type const &key) const
 		{
 		
-			if (temp == NULL)
+			if (temp == nullptr)
 				return (this->_end);
 
 			if (temp->key == key)
@@ -111,6 +111,7 @@ namespace ft
 				_clearTree(root->right);
 				this->_alloc.destroy(root);
 				this->_alloc.deallocate(root, 1);
+				root = NULL;
 			}
 		}
 		Node_ptr _min() const
@@ -118,7 +119,7 @@ namespace ft
 			if (this->_root == this->_end)
 				return (this->_end);
 			Node_ptr temp = this->_root;
-			while (temp && temp->left && temp->left != nullptr)
+			while (temp->left && temp->left != _end)
 				temp = temp->left;
 			return (temp);
 		}
@@ -276,46 +277,25 @@ namespace ft
 			while (x != nullptr)
 			{
 				t = x;
-				if (!this->_comp(x->key, newNode->key))
+				if (this->_comp( newNode->key, x->key))
 					x = x->left;
 				else if (this->_comp(x->key, newNode->key))
 					x = x->right;
+				else
+				{
+					_alloc.destroy(newNode);
+					_alloc.deallocate(newNode, 1);
+					return x;
+				}
 			}
 			newNode->parent = t;
-			if (!this->_comp(t->key, newNode->key))
+			if (this->_comp(newNode->key, t->key))
 				t->left = newNode;
 			else
 				t->right = newNode;
 			insertFixup(newNode);
 			return (newNode);
 		}
-
-		// void x_right_case(Node_ptr x, Node_ptr w)
-		// {
-		// 	if (w->color == RED) {
-		// 		w->color = BLACK;
-		// 		x->parent->color = RED;
-		// 		rightRotate(x->parent);
-		// 		w = x->parent->left;
-		// 	}
-		// 	if (w->left->color == BLACK && w->right->color == BLACK) {
-		// 		w->color = RED;
-		// 		x = x->parent;
-		// 	} else {
-		// 		if (w->left->color == BLACK) {
-		// 		w->right->color = BLACK;
-		// 		w->color = RED;
-		// 		leftRotate(w);
-		// 		w = x->parent->left;
-		// 		}
-		// 		w->color = x->parent->color;
-		// 		x->parent->color = BLACK;
-		// 		w->left->color = BLACK;
-		// 		rightRotate(x->parent);
-		// 		x = this->_root;
-		// 	}
-
-		// }
 
 		void x_right_case(Node_ptr &node, Node_ptr &sibling, Node_ptr &parent)
 		{
@@ -663,10 +643,11 @@ namespace ft
 		iterator end() { return (iterator(this->_end)); };
 		const_iterator end() const { return (const_iterator(this->_end)); }
 
-		reverse_iterator rbegin() { return (reverse_iterator(iterator(_max()))); }
-		const_reverse_iterator rbegin() const { return (const_reverse_iterator(iterator(_max()))); }
-		reverse_iterator rend() { return (reverse_iterator((iterator(_min() - 1)))); }
-		const_reverse_iterator rend() const { return (const_reverse_iterator((iterator(_min() - 1)))); }
+
+		reverse_iterator		rbegin()		{return(reverse_iterator(--end()));}
+		const_reverse_iterator	rbegin() const {return(const_reverse_iterator(--end()));}
+		reverse_iterator rend() { return (reverse_iterator(--begin())); }
+		const_reverse_iterator rend() const { return (const_reverse_iterator(--begin())); }
 
 		// CAPACITY-----------------------------------
 		bool empty() const
@@ -728,7 +709,12 @@ namespace ft
 					return (1);
 				}
 				else
+				{
+					node = NULL;
 					return (0);
+
+				}
+					
 
 			
 
@@ -817,37 +803,13 @@ namespace ft
 			std::cout << "the root is: " << node->key << std::endl;
 		}
 
-		// void print2d(Node_ptr root, int space)
-		// {
-		// 	if (root == NULL)
-		// 	    return;
-		// 	space += 10;
-		// 	print2d(root->right, space);
-		// 	std::cout << std::endl;
-		// 	for (int i = 10; i < space; i++)
-		// 	    std::cout << " ";
-		// 	std::cout << root->key << ":";
-		// 	// if (root->_parent != NULL)
-		// 	//     std::cout << *root->_parent->_key;
-		// 	if (root->color == BLACK)
-		// 	    std::cout << ":BLACK" << std::endl;
-		// 	else
-		// 	    std::cout << ":RED" << std::endl;
-		// 	print2d(root->left, space);
-		// }
 	};
 
 	template <class Node_ptr>
 	Node_ptr predecessor(Node_ptr node)
 	{
 
-		// if(node == nullptr && node->left)
-		// {
-
-		// 	node = node->left;
-		// 	return (_TreeMax(node->left));
-
-		// }
+	
 		if (node->left && node)
 		{
 
@@ -861,7 +823,7 @@ namespace ft
 			node = temp;
 			temp = temp->parent;
 		}
-		if (temp == 0)
+		if (!temp)
 			return (node);
 		return (temp);
 	}
@@ -884,18 +846,24 @@ namespace ft
 		return (temp);
 	};
 
-	template <class Node_ptr>
+	template<class Node_ptr>	
 	Node_ptr successor(Node_ptr node)
 	{
-
+			
 		if (node->right)
 			return (_TreeMin(node->right));
-
+		
 		Node_ptr temp = node->parent;
 		while (temp && temp->right == node)
 		{
 			node = temp;
 			temp = temp->parent;
+		}
+		if(!temp && node->left)
+		{
+			node = node->left;
+			return (_TreeMin(node->left));
+
 		}
 		return (temp);
 	};

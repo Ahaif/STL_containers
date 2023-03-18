@@ -6,7 +6,7 @@
 /*   By: ahaifoul <ahaifoul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:10:55 by ahaifoul          #+#    #+#             */
-/*   Updated: 2023/02/23 18:06:59 by ahaifoul         ###   ########.fr       */
+/*   Updated: 2023/03/18 17:07:58 by ahaifoul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,10 @@
 #include <iostream>
 #include <string>
 #include <iterator>
+
 #include "iterator.hpp"
 
-#include "../iterator_traits.hpp"
+#include "iterator_traits.hpp"
 
 
 namespace ft 
@@ -49,14 +50,29 @@ namespace ft
 			reverse_iterator		operator-( difference_type n ) const	{ return (reverse_iterator(this->_it + n)); };
 			reverse_iterator&		operator++()							{
 				
-				--this->_it; return (*this); };								// pre-increment
-			reverse_iterator		operator++(int)							{ reverse_iterator temp(*this); --(this->_it); return (temp); };	// post-increment
-			reverse_iterator&		operator--()							{
+				--this->_it; return (*this); 
+				};	
+
+			// pre-increment
+			reverse_iterator		operator++(int)	{ 
+				reverse_iterator temp(*this); --(this->_it); return (temp);
+				 };
+				 
+			// post-increment
+			reverse_iterator&		operator--(){
+
+					++this->_it;
+					 return (*this);
 				
-				++this->_it; return (*this); };								// pre-decrement
-			reverse_iterator		operator--(int)							{ 
+			 };	
+			 
+			// pre-decrement
+			reverse_iterator		operator--(int){ 
 				// std::cout<<"vvv"<<std::endl;
-				reverse_iterator temp(*this); --(*this); return (temp); };	// post-decrement
+				reverse_iterator temp(*this); --(*this); return (temp); 
+			};	
+			
+			// post-decrement
 			reverse_iterator&		operator+=( difference_type n )			{ this->_it -= n; return (*this); };
 			reverse_iterator&		operator-=( difference_type n )			{ this->_it += n; return (*this); };
 			pointer					operator->()							{ return (&(operator*())); };
