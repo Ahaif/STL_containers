@@ -6,7 +6,7 @@
 /*   By: ahaifoul <ahaifoul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:10:58 by ahaifoul          #+#    #+#             */
-/*   Updated: 2023/03/18 17:53:15 by ahaifoul         ###   ########.fr       */
+/*   Updated: 2023/03/19 09:14:08 by ahaifoul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,34 +51,25 @@ namespace ft
         public :   /*   Constructors   */
             explicit vector (const allocator_type& alloc = allocator_type()): 
                 _alloc(alloc), _vec(nullptr), _size(0), _capacity(0) {};
+
             explicit vector (size_type n, const value_type& val = value_type(),
                         const allocator_type& alloc = allocator_type()) :
                  _alloc(alloc), _vec(nullptr), _size(0), _capacity(0) 
             {
                 assign(n, val);
             };
+
             // check if enable if is necessary
             template <class InputIterator>
             vector (InputIterator first, typename ft::enable_if<!is_integral<InputIterator>::value, InputIterator>::type last,const allocator_type& alloc = allocator_type()):
                     _alloc(alloc), _vec(nullptr), _size(0), _capacity(0)
             {
-                // try
-                // {
                     assign(first, last);
-                // }
-                // catch(const std::exception& e)
-                // {
-                //     clear();
-                //     this->_alloc.deallocate(this->_vec, capacity());
-                // }
-                
-                
-                
-                
             };
 
-            vector (const vector& x): _vec(nullptr), _size(0), _capacity(0) { *this = x;
-            };
+
+            vector (const vector& x): _vec(nullptr), _size(0), _capacity(0)
+             { *this = x;};
 
             //DESTRUCTORS
         public:
@@ -106,21 +97,19 @@ namespace ft
             {
                 try{
                 
-                clear();
-                if (n > capacity())
-                {
-                    this->_alloc.deallocate(this->_vec, capacity());
-                    this->_vec = this->_alloc.allocate(n);
-                    this->_capacity = n;
-                }
-                for (size_t i = 0; i < n; i++)
-                {
-                    this->_alloc.construct(this->_vec + i, val);
-                    _size++;
+                    clear();
+                    if (n > capacity())
+                    {
+                        this->_alloc.deallocate(this->_vec, capacity());
+                        this->_vec = this->_alloc.allocate(n);
+                        this->_capacity = n;
+                    }
+                    for (size_t i = 0; i < n; i++)
+                    {
+                        this->_alloc.construct(this->_vec + i, val);
+                        _size++;
 
-                }
-                    
-                // this->_size = n;
+                    }
                 }
                 catch(const std::bad_alloc& e)
                 {
@@ -128,6 +117,7 @@ namespace ft
                     this->_alloc.deallocate(this->_vec, capacity());
                 }
             }
+
             template <class InputIterator>
             void assign(InputIterator first, typename ft::enable_if<!is_integral<InputIterator>::value, InputIterator>::type last)
             {
@@ -165,6 +155,7 @@ namespace ft
                 }
   
             }
+
             iterator insert (iterator position, const value_type& val)
             {
                 difference_type diff = end() - position;
@@ -206,53 +197,43 @@ namespace ft
 				}
 				this->_size += n;
             };
+
            template <class InputIterator>
             void insert (iterator position, InputIterator first,typename ft::enable_if<!is_integral<InputIterator>::value, InputIterator>::type last)
             {
 
-
                 try{
-                    
-                    vector tmp(first, last);
-   
-                    if (tmp.size() == 0)
-                    {
-                        std::cout<<"passed: "<<tmp.capacity()<<std::endl;
-                        return;
-                    }
-                    if (first > last || ((position <= begin()) && (position > end()))) {
-                        std::cout<<"passed: "<<std::endl;
-                        return;
-                    }
+                        
+                        vector tmp(first, last);
+    
+                        if (tmp.size() == 0)
+                            return;
 
-                    difference_type	diff = end() - position;
-                    difference_type	len	= last - first;
-                    difference_type posIndex = position - begin();
-                    
-                    if (size() + len > capacity())
-                    {
-                        if (size() + len > capacity() * 2)
+                        if (first > last || ((position <= begin()) && (position > end())))
+                            return;
+         
+                        difference_type	diff = end() - position;
+                        difference_type	len	= last - first;
+                        difference_type posIndex = position - begin();
+                        
+                        if (size() + len > capacity())
                         {
-                            
-
-                            reserve(size() + len);
+                            if (size() + len > capacity() * 2)
+                                reserve(size() + len);
+                            else
+                                reserve(capacity() * 2);
                         }
-                        else
+                        iterator it = end() - 1;
+                        for (long i = 0; i < diff; i++)
                         {
-                            reserve(capacity() * 2);
+                            *(it + len) = *(it);
+                            it--;
                         }
-                    }
-                    iterator it = end() - 1;
-                    for (long i = 0; i < diff; i++)
-                    {
-                        *(it + len) = *(it);
-                        it--;
-                    }
-                    it = begin() + posIndex;
-                    int i = 0;
-                    for (; i < len; i++)
-                        *(it + i) = *(first++);
-                    _size = _size + len;
+                        it = begin() + posIndex;
+                        int i = 0;
+                        for (; i < len; i++)
+                            *(it + i) = *(first++);
+                        _size = _size + len;
                 }
                 catch(const std::bad_alloc& e)
                 {
@@ -262,7 +243,6 @@ namespace ft
         
             }
 
-            
             void clear()
 			{
                 while (_size != 0)
@@ -282,7 +262,6 @@ namespace ft
             void pop_back()
             {
                 this->_alloc.destroy(this->_vec + this->_size);
-                // this->_alloc.deallocate(this->_vec[_size], 1);
                 --this->_size;
             }
 
@@ -293,14 +272,10 @@ namespace ft
 				std::swap(x._capacity, this->_capacity);
 				std::swap(x._alloc, this->_alloc);
 				std::swap(x._vec, this->_vec);
-
-
 			};
+
             iterator erase (iterator position)
             {
-
-                
-
                 iterator it = position;
 				this->_alloc.destroy(it.base());
 				while (it != end() - 1)
@@ -312,14 +287,9 @@ namespace ft
 				return (position);
             };
 
-
-
             iterator erase (iterator first, iterator last)
             {
                
-                // if (*last < *first || *first < *(begin()) || *last > *(end())) {
-                //         return last;
-                //     }
                 if (last < first || first < begin() || last > end()) {
                     return end();
                 }
@@ -334,11 +304,11 @@ namespace ft
                 for (; it != end(); ++it) {
                     _alloc.destroy(it.base());
                 }
-
                 _size -= len;
                 return first;
 
             };
+            
 
          public : /*   ------CAPACITY-------------  */
             size_type   capacity()    const   {return this->_capacity;};

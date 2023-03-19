@@ -6,7 +6,7 @@
 /*   By: ahaifoul <ahaifoul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 10:35:45 by ahaifoul          #+#    #+#             */
-/*   Updated: 2023/03/16 11:50:02 by ahaifoul         ###   ########.fr       */
+/*   Updated: 2023/03/19 10:12:35 by ahaifoul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ namespace ft
         public:
             class value_compare
             {
-                friend class map;
 
 				protected:
 					Compare _comp;
@@ -85,11 +84,11 @@ namespace ft
 				
 			map (const map& x) { *this = x; };
 
-		public: /*             destructors                         */
+		public: 
 			~map() { };
-			// ;
+	
 
-		public: /*             operator=                         */
+		public: 
 			map& operator= (const map& x)
 			{
 				if (this != &x)
@@ -159,13 +158,12 @@ namespace ft
 					const key_type& key = first->first; 
 					first++;
        				this->_tree.remove(key); 
-       				 // move to the next node
 						
 				}
 			};
 			void					swap (map& x) { this->_tree.swap(x._tree); };
 			void					clear() { this->_tree.clear(); };
-public: /*             Observers                         */
+	public: /*             Observers                         */
 			key_compare		key_comp()	const	{ return (this->_comp); };
 			value_compare	value_comp()	const	{ return (value_compare(_comp)); };
 

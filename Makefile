@@ -1,4 +1,4 @@
-CC = c++
+CC = clang++
 FLAGS = -g  -std=c++98 -Wall -Werror -Wextra #-fsanitize=address  -fsanitize=undefined
 
 OBJECT_PATH = ./object_files/
