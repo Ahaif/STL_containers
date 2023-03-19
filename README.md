@@ -4,9 +4,10 @@ In this project, I re-implement a few container types of the C++ standard templa
 # Containers
 Recoding from scratch the following containers with their Methods that exist in std--98
 
-- vector
-- Map : Implement AVL tree 
-- stack : using vector class as default underlying container. But it must still be compatible with other containers, the STL ones included.
+- Vector
+- Stack : using vector class as default underlying container. But it must still be compatible with other containers, the STL ones included.
+- Map : RedBlack Tree Implementation  
+- Set : RedBlack Tree Implementation  
 
 You also have to implement:
 - iterators_traits
@@ -17,5 +18,4 @@ You also have to implement:
 - std::pair
 - std::make_pair
 
-- See Subject attached for more details about the projects
-
+- See Subject attached for more details about the projects requirments
