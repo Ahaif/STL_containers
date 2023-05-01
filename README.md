@@ -1,5 +1,5 @@
 # Description
-In this project, I re-implement a few container types of the C++ standard template library. comply with the C++98 standard, so any later feature of the containers MUST NOT be implemented, 
+In this project, I re-implement a few container types of the C++ standard template library. 
 
 # Containers
 Recoding from scratch the following containers with their Methods that exist in std--98
@@ -9,7 +9,7 @@ Recoding from scratch the following containers with their Methods that exist in 
 - Map : RedBlack Tree Implementation  
 - Set : RedBlack Tree Implementation  
 
-You also have to implement:
+Additional Classes:
 - iterators_traits
 - reverse_iterator
 - enable_if
